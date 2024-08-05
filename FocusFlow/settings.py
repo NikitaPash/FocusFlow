@@ -20,6 +20,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'brainstorm_tools',
+    'development_dashboard',
+    'homepage_and_profile',
+    'notifications',
+    'pomodoro_timer',
+    'user_auth',
 ]
 
 MIDDLEWARE = [
