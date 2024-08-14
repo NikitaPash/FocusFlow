@@ -18,11 +18,11 @@
               <div class="card-body text-left">
                 <form method="POST" autocomplete="off">
                   {% csrf_token %}
-                  <div class="form-group">
+                  <div class="form-group my-3">
                     <label for="InputUsername">Username</label>
                     {{loginform.username}}
                   </div>
-                  <div class="form-group">
+                  <div class="form-group my-3">
                     <label for="InputPassword">Password</label>
                     {{loginform.password}}
                   </div>
