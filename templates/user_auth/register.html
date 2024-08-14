@@ -8,10 +8,12 @@
     <title>Title</title>
 </head>
 <body>
-
 {% block content %}
-    <h1>Welcome to register page!</h1>
-    <p>This is the register content.</p>
+    <form method="POST" autocomplete="off">
+    {% csrf_token %}
+    {{ registerform.as_p }}
+    <input type="submit" value="Register">
+    </form>
 {% endblock %}
 </body>
 </html>
