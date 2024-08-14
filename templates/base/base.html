@@ -9,7 +9,9 @@
 </head>
 <body>
     <header>
-        {% include 'base/navbar.html' %}
+        {% block header %}
+
+        {% endblock header %}
     </header>
 
     <main>
@@ -18,7 +20,7 @@
         {% endblock %}
     </main>
 
-    <footer>
+    <footer class="footer fixed-bottom">
         {% block footer %}
         <p>&copy; 2024 FocusFlow</p>
         {% endblock %}

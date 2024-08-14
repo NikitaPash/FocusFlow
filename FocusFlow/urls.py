@@ -8,5 +8,5 @@ urlpatterns = [
     # path('development-dashboard/', include('development_dashboard')),
     path('', include('homepage_and_profile.urls')),
     # path('notifications/', include('notifications.urls')),
-    # path('user-auth/', include('user_auth.urls')),
+    path('user-auth/', include('user_auth.urls')),
 ]

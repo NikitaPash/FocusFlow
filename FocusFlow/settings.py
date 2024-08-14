@@ -91,7 +91,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+LOGIN_URL = '/'
 # Internationalization
 
 LANGUAGE_CODE = 'en-us'
