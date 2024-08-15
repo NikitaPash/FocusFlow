@@ -26,10 +26,10 @@ class CreateUserForm(UserCreationForm):
 
 
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(
+    username = forms.CharField(required=False,
         widget=TextInput(attrs={'type': "text", 'class': "form-control", 'name': "username", 'id': "InputUsername",
                                 'placeholder': "Enter username"}))
-    password = forms.CharField(widget=PasswordInput(
+    password = forms.CharField(required=False, widget=PasswordInput(
         attrs={'type': "password", 'class': "form-control", 'name': "password", 'id': "InputPassword",
                'placeholder': "Enter password"}))
 
