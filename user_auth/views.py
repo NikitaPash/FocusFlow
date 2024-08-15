@@ -1,9 +1,10 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import PasswordResetView
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth.models import auth
 
-from .forms import CreateUserForm, LoginForm
+from .forms import CreateUserForm, LoginForm, MyPasswordResetForm
 from .decorators import user_not_authenticated
 
 
@@ -23,6 +24,7 @@ def register_view(request):
 @user_not_authenticated
 def login_view(request):
     form = LoginForm(request, data=request.POST or None)
+    reset_form = MyPasswordResetForm()
 
     if request.method == 'POST' and form.is_valid():
         username = request.POST.get('username')
@@ -38,7 +40,7 @@ def login_view(request):
                 request.session.set_expiry(0)
             return redirect('home')
 
-    context = {'loginform': form}
+    context = {'loginform': form, 'reset_form': reset_form}
 
     return render(request, 'user_auth/login.html', context)
 

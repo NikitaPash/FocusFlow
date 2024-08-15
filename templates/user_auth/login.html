@@ -1,11 +1,7 @@
 {% extends 'base/base.html' %}
 
-
-<!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{% block title %}Login - Focus Flow{% endblock %}</title>
 </head>
 <body>
 {% block content %}
@@ -26,18 +22,58 @@
                     <label for="InputPassword">Password</label>
                     {{loginform.password}}
                   </div>
+                  <div class="d-flex justify-content-between align-items-center">
                   <div class="form-check">
                       <label class="form-check-label" for="RememberCheck">
                           Remember me
                       </label>
                       {{loginform.remember_me}}
                   </div>
-                  <button type="submit" class="btn btn-dark mt-2">Submit</button>
+                  <a href="#PassResetModal" data-bs-toggle="modal" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Forgot password?</a>
+                  </div>
+                  <div class="modal fade" id="PassResetModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="card mt-3 shadow">
+                              <div class="modal-header pt-7">
+                                  <div class="d-flex justify-content-between w-100">
+                                      <div>
+                                          <h1 class="modal-title fs-5 mb-2" id="exampleModalLabel">Forgot password?</h1>
+                                          <h6 class="card-subtitle text-body-secondary">We’ll send you a link to reset your password.</h6>
+                                      </div>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                              </div>
+                              <div class="modal-body pb-0 pt-0">
+                                <div class="card-body text-left pt-0">
+                                  <form method="POST" autocomplete="off">
+                                    {% csrf_token %}
+                                    <div class="form-group my-2">
+                                      <label for="InputEmail" class="mb-2">Enter email:</label>
+                                      {{reset_form.email}}
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+                              <div class="modal-footer">
+                                <div class="d-grid col-4 mx-auto text-center">
+                                    <button type="submit" class="btn btn-dark">Submit</button>
+                                </div>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <div class="d-grid col-4 mx-auto text-center">
+                      <button type="submit" class="btn btn-dark">Submit</button>
+                  </div>
                 </form>
+                <div class="card-footer text-body-secondary text-center mt-3">
+                    Don't have an account?
+                </div>
               </div>
             </div>
         </div>
     </div>
 {% endblock %}
 </body>
-</html>

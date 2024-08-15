@@ -1,11 +1,7 @@
 {% extends 'base/base.html' %}
 
-
-<!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{% block title %}Register - Focus Flow{% endblock %}</title>
 </head>
 <body>
 {% block content %}
@@ -46,7 +42,9 @@
                         <label class="text-danger">{{ registerform.errors.password2 }}</label>
                       {% endif %}
                   </div>
-                  <button type="submit" class="btn btn-dark">Submit</button>
+                  <div class="d-grid col-4 mx-auto text-center">
+                      <button type="submit" class="btn btn-dark">Submit</button>
+                  </div>
                 </form>
               </div>
             </div>
@@ -54,4 +52,3 @@
     </div>
 {% endblock %}
 </body>
-</html>
