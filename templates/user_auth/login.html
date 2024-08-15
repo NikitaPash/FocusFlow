@@ -11,7 +11,7 @@
 {% block content %}
     <div class="row justify-content-center mx-auto">
         <div class="col-md-6">
-            <div class="card mt-3">
+            <div class="card mt-3 shadow">
               <div class="card-header text-center">
                   Login
               </div>
@@ -26,7 +26,13 @@
                     <label for="InputPassword">Password</label>
                     {{loginform.password}}
                   </div>
-                  <button type="submit" class="btn btn-dark">Submit</button>
+                  <div class="form-check">
+                      <label class="form-check-label" for="RememberCheck">
+                          Remember me
+                      </label>
+                      {{loginform.remember_me}}
+                  </div>
+                  <button type="submit" class="btn btn-dark mt-2">Submit</button>
                 </form>
               </div>
             </div>

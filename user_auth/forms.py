@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 
 from django import forms
-from django.forms.widgets import PasswordInput, TextInput, EmailInput
+from django.forms.widgets import PasswordInput, TextInput, EmailInput, CheckboxInput
 
 
 class CreateUserForm(UserCreationForm):
@@ -31,3 +31,7 @@ class LoginForm(AuthenticationForm):
     password = forms.CharField(widget=PasswordInput(
         attrs={'type': "password", 'class': "form-control", 'name': "password", 'id': "InputPassword",
                'placeholder': "Enter password"}))
+
+    remember_me = forms.BooleanField(required=False,
+                                     widget=CheckboxInput(attrs={'class': "form-check-input", 'type': "checkbox",
+                                                                 'id': "RememberCheck"}))
