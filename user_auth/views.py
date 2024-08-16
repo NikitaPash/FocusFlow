@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import PasswordResetConfirmView
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth.models import auth
+from django.urls import reverse_lazy
 
-from .forms import CreateUserForm, LoginForm, MyPasswordResetForm
+from .forms import CreateUserForm, LoginForm, MyPasswordResetForm, MySetPasswordForm
 from .decorators import user_not_authenticated
 
 
@@ -44,7 +46,7 @@ def login_view(request):
             reset_form.save(request=request, html_email_template_name='user_auth/forgot_password/password_reset_email'
                                                                       '.html',
                             subject_template_name='emails/password_reset_subject.txt',
-                            email_template_name='emails/password_reset_email.txt',)
+                            email_template_name='emails/password_reset_email.txt', )
             return redirect('password_reset_done')
 
     context = {'loginform': form, 'reset_form': reset_form}
@@ -55,3 +57,20 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
+
+
+# def password_reset_confirm(request, **kwargs):
+#     new_pass_form = MySetPasswordForm(request.POST or None)
+#
+#     if request.method == 'POST' and new_pass_form.is_valid():
+#         new_pass_form.save()
+#         return redirect('password_reset_complete')
+#
+#     context = {'new_pass_form': new_pass_form}
+#     return render(request, 'user_auth/forgot_password/password_reset_confirm.html', context=context)
+
+
+class MyPasswordResetConfirmView(PasswordResetConfirmView):
+    form_class = MySetPasswordForm
+    success_url = reverse_lazy('password_reset_complete')
+    template_name = 'user_auth/forgot_password/password_reset_confirm.html'

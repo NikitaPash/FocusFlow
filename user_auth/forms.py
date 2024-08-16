@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm, SetPasswordForm
 from django.contrib.auth.models import User
 
 from django import forms
@@ -27,8 +27,9 @@ class CreateUserForm(UserCreationForm):
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(required=False,
-        widget=TextInput(attrs={'type': "text", 'class': "form-control", 'name': "username", 'id': "InputUsername",
-                                'placeholder': "Enter username"}))
+                               widget=TextInput(attrs={'type': "text", 'class': "form-control", 'name': "username",
+                                                       'id': "InputUsername",
+                                                       'placeholder': "Enter username"}))
     password = forms.CharField(required=False, widget=PasswordInput(
         attrs={'type': "password", 'class': "form-control", 'name': "password", 'id': "InputPassword",
                'placeholder': "Enter password"}))
@@ -44,3 +45,20 @@ class MyPasswordResetForm(PasswordResetForm):
                                 attrs={"autocomplete": "email", 'class': "form-control", 'name': "email",
                                        'id': "InputEmail",
                                        'placeholder': "Email address"}))
+
+
+class MySetPasswordForm(SetPasswordForm):
+    new_password1 = forms.CharField(
+        label="New password",
+        widget=forms.PasswordInput(
+            attrs={"autocomplete": "new-password", 'type': "password", 'class': "form-control",
+                   'name': "new_password1", 'id': "InputPassword",
+                   'placeholder': "New password"}),
+    )
+    new_password2 = forms.CharField(
+        label="New password confirmation",
+        widget=forms.PasswordInput(
+            attrs={"autocomplete": "new-password", 'type': "password", 'class': "form-control",
+                   'name': "new_password2", 'id': "InputPasswordConfirm",
+                   'placeholder': "Confirm password"}),
+    )
