@@ -17,18 +17,26 @@
                 <form method="POST" autocomplete="off">
                   {% csrf_token %}
                   <div class="form-group my-3">
-                    <label for="InputEmail">Email</label>
+                    <label for="InputLoginEmail">Email</label>
                     {{loginform.email}}
                     {% if loginform.errors.email %}
                         <label class="text-danger">{{ loginform.errors.email }}</label>
                     {% endif %}
                   </div>
                   <div class="form-group my-3">
-                    <label for="InputPassword">Password</label>
-                    {{loginform.password}}
-                    {% if loginform.errors.password %}
-                        <label class="text-danger">{{ loginform.errors.password }}</label>
-                    {% endif %}
+                      <label for="InputPassword">Password</label>
+                      <div class="input-group">
+                          {{ loginform.password }}
+                          <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                              <i class="bi bi-eye"></i>
+                          </button>
+                      </div>
+                      {% if loginform.errors.password %}
+                          <label class="text-danger">{{ loginform.errors.password }}</label>
+                      {% endif %}
+                      {% if loginform.non_field_errors %}
+                          <label class="text-danger">{{ loginform.non_field_errors }}</label>
+                      {% endif %}
                   </div>
                   <div class="d-flex justify-content-between align-items-center">
                   <div class="form-check">
@@ -84,7 +92,7 @@
       <div class="modal-body pb-0 pt-0">
         <div class="card-body text-left pt-0">
             <div class="form-group my-2">
-              <label for="InputEmail" class="mb-2">Enter email:</label>
+              <label for="InputResetEmail" class="mb-2">Enter email:</label>
               {{reset_form.email}}
             </div>
         </div>
@@ -99,5 +107,15 @@
 </div>
 </div>
 </div>
+<script>
+    document.getElementById('togglePassword').addEventListener('click', function () {
+        const passwordField = document.getElementById('{{ loginform.password.id_for_label }}');
+        const toggleIcon = this.querySelector('i');
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+        toggleIcon.classList.toggle('bi-eye');
+        toggleIcon.classList.toggle('bi-eye-slash');
+    });
+</script>
 {% endblock %}
 </body>

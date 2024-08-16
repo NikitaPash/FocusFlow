@@ -8,16 +8,16 @@ from django.forms.widgets import PasswordInput, TextInput, EmailInput, CheckboxI
 
 class CreateUserForm(UserCreationForm):
     username = forms.CharField(widget=TextInput(
-        attrs={'type': "text", 'class': "form-control", 'name': "username", 'id': "InputUsername",
+        attrs={'type': "text", "autocomplete": "username", 'class': "form-control", 'name': "username", 'id': "InputUsername",
                'placeholder': "Enter username"}))
     email = forms.EmailField(widget=EmailInput(
-        attrs={'type': "email", 'class': "form-control", 'name': "email", 'id': "InputEmail",
+        attrs={'type': "email", "autocomplete": "email", 'class': "form-control", 'name': "email", 'id': "InputEmail",
                'placeholder': "Enter email"}))
     password1 = forms.CharField(widget=PasswordInput(
-        attrs={'type': "password", 'class': "form-control", 'name': "password1", 'id': "InputPassword",
+        attrs={'type': "password", "autocomplete": "new-password", 'class': "form-control", 'name': "password1", 'id': "InputPassword",
                'placeholder': "Enter password"}))
     password2 = forms.CharField(widget=PasswordInput(
-        attrs={'type': "password", 'class': "form-control", 'name': "password2", 'id': "InputPasswordConfirm",
+        attrs={'type': "password", "autocomplete": "new-password", 'class': "form-control", 'name': "password2", 'id': "InputPasswordConfirm",
                'placeholder': "Confirm password"}))
 
     class Meta:
@@ -30,11 +30,10 @@ class LoginForm(AuthenticationForm):
     username = forms.CharField(required=False)
 
     email = forms.EmailField(widget=EmailInput(
-        attrs={'type': "email", 'class': "form-control", 'name': "email", 'id': "InputEmail",
+        attrs={'type': "email", "autocomplete": "email", 'class': "form-control", 'name': "email", 'id': "InputLoginEmail",
                'placeholder': "Enter email"}))
-
     password = forms.CharField(required=False, widget=PasswordInput(
-        attrs={'type': "password", 'class': "form-control", 'name': "password", 'id': "InputPassword",
+        attrs={'type': "password", "autocomplete": "current-password", 'class': "form-control", 'name': "password", 'id': "InputPassword",
                'placeholder': "Enter password"}))
 
     remember_me = forms.BooleanField(required=False,
@@ -62,7 +61,7 @@ class MyPasswordResetForm(PasswordResetForm):
     email = forms.CharField(label="Email", max_length=254, required=True,
                             widget=forms.EmailInput(
                                 attrs={"autocomplete": "email", 'class': "form-control", 'name': "email",
-                                       'id': "InputEmail",
+                                       'id': "InputResetEmail",
                                        'placeholder': "Email address"}))
 
 
