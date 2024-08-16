@@ -44,6 +44,9 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+SOCIALACCOUNT_ADAPTER = 'user_auth.adapters.MySocialAccountAdapter'
+
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
