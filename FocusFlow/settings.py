@@ -13,7 +13,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-SITE_ID = 2
+SITE_ID = 3
 
 INSTALLED_APPS = [
     'django.contrib.sites',
@@ -36,8 +36,12 @@ INSTALLED_APPS = [
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
+AUTH_USER_MODEL = 'user_auth.User'
+
 AUTHENTICATION_BACKENDS = [
-    'allauth.account.auth_backends.AuthenticationBackend'
+    'user_auth.backends.EmailBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {

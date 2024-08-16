@@ -1,8 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm, SetPasswordForm
-from django.contrib.auth.models import User
+from user_auth.models import User
+from django.contrib.auth import authenticate
 
 from django import forms
-from django.contrib.auth.views import PasswordResetView
 from django.forms.widgets import PasswordInput, TextInput, EmailInput, CheckboxInput
 
 
@@ -10,7 +10,7 @@ class CreateUserForm(UserCreationForm):
     username = forms.CharField(widget=TextInput(
         attrs={'type': "text", 'class': "form-control", 'name': "username", 'id': "InputUsername",
                'placeholder': "Enter username"}))
-    email = forms.CharField(widget=EmailInput(
+    email = forms.EmailField(widget=EmailInput(
         attrs={'type': "email", 'class': "form-control", 'name': "email", 'id': "InputEmail",
                'placeholder': "Enter email"}))
     password1 = forms.CharField(widget=PasswordInput(
@@ -26,10 +26,13 @@ class CreateUserForm(UserCreationForm):
 
 
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(required=False,
-                               widget=TextInput(attrs={'type': "text", 'class': "form-control", 'name': "username",
-                                                       'id': "InputUsername",
-                                                       'placeholder': "Enter username"}))
+
+    username = forms.CharField(required=False)
+
+    email = forms.EmailField(widget=EmailInput(
+        attrs={'type': "email", 'class': "form-control", 'name': "email", 'id': "InputEmail",
+               'placeholder': "Enter email"}))
+
     password = forms.CharField(required=False, widget=PasswordInput(
         attrs={'type': "password", 'class': "form-control", 'name': "password", 'id': "InputPassword",
                'placeholder': "Enter password"}))
@@ -37,6 +40,22 @@ class LoginForm(AuthenticationForm):
     remember_me = forms.BooleanField(required=False,
                                      widget=CheckboxInput(attrs={'class': "form-check-input", 'type': "checkbox",
                                                                  'id': "RememberCheck"}))
+
+    def clean(self):
+        email = self.cleaned_data.get('email')
+        password = self.cleaned_data.get('password')
+
+        if email and password:
+            self.user_cache = authenticate(self.request, username=email, password=password)
+            if self.user_cache is None:
+                raise forms.ValidationError("Invalid email or password.")
+            elif not self.user_cache.is_active:
+                raise forms.ValidationError("This account is inactive.")
+
+        return self.cleaned_data
+
+    def get_user(self):
+        return self.user_cache
 
 
 class MyPasswordResetForm(PasswordResetForm):

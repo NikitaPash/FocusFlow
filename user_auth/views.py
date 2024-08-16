@@ -28,11 +28,12 @@ def login_view(request):
     reset_form = MyPasswordResetForm(request.POST or None)
 
     if request.method == 'POST':
+        print(form.errors)
         if 'login_submit' in request.POST and form.is_valid():
-            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
             remember_me = form.cleaned_data.get('remember_me')
-            user = authenticate(request, username=username, password=password)
+            user = authenticate(request, username=email, password=password)
 
             if user is not None:
                 auth.login(request, user)
@@ -43,8 +44,8 @@ def login_view(request):
                 return redirect('home')
 
         elif 'reset_submit' in request.POST and reset_form.is_valid():
-            reset_form.save(request=request, html_email_template_name='user_auth/forgot_password/password_reset_email'
-                                                                      '.html',
+            reset_form.save(request=request,
+                            html_email_template_name='user_auth/forgot_password/password_reset_email.html',
                             subject_template_name='emails/password_reset_subject.txt',
                             email_template_name='emails/password_reset_email.txt', )
             return redirect('password_reset_done')
@@ -57,17 +58,6 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
-
-
-# def password_reset_confirm(request, **kwargs):
-#     new_pass_form = MySetPasswordForm(request.POST or None)
-#
-#     if request.method == 'POST' and new_pass_form.is_valid():
-#         new_pass_form.save()
-#         return redirect('password_reset_complete')
-#
-#     context = {'new_pass_form': new_pass_form}
-#     return render(request, 'user_auth/forgot_password/password_reset_confirm.html', context=context)
 
 
 class MyPasswordResetConfirmView(PasswordResetConfirmView):
