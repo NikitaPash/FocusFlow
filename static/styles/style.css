@@ -1,0 +1,24 @@
+.form-control:focus {
+    border-color: #343a40;
+    box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.25);
+}
+
+.dropdown-menu {
+    background-color: #343a40;
+}
+
+.dropdown-menu > li > a {
+    color: #989fab;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.dropdown-item:hover {
+    background-color: #495057;
+    color: #ffffff;
+}
+
+.dropdown-item:active,
+.dropdown-item:focus {
+    background-color: #6c757d;
+    color: #ffffff;
+}
