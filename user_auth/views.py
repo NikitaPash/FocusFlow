@@ -28,7 +28,6 @@ def login_view(request):
     reset_form = MyPasswordResetForm(request.POST or None)
 
     if request.method == 'POST':
-        print(form.errors)
         if 'login_submit' in request.POST and form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')

@@ -1,0 +1,26 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-header text-center">
+          <h4 class="card-title mt-2 text-dark">
+            {% block card_title %}Card Title{% endblock %}
+          </h4>
+        </div>
+        <div class="card-body text-center p-4">
+          {% block card_content %}
+          <p class="card-text">
+            Default content goes here.
+          </p>
+          {% endblock %}
+          <a href="{% url 'home' %}" class="btn btn-dark mt-2">
+            Return to Home
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

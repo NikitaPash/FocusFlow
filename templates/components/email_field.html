@@ -1,0 +1,8 @@
+{{ field.email }}
+{% if field.errors.email %}
+  <ul class="field-errors mb-0">
+      {% for err in field.errors.email %}
+         <li class="text-danger">{{ err }}</li>
+      {% endfor %}
+  </ul>
+{% endif %}
