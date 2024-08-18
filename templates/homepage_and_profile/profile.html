@@ -1,0 +1,123 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+<head>
+    <title>{% block title %}Profile - Focus Flow{% endblock %}</title>
+</head>
+<body>
+{% block content %}
+<div class="container py-3">
+<div class="row">
+  <div class="col-lg-4">
+    <div class="card mb-4">
+      <div class="card-body text-center pb-0">
+        <img src="{% static 'images/profile_placeholder.jpg' %}" alt="avatar"
+          class="rounded-circle img-fluid" style="width: 150px;">
+        <h5 class="my-3">{{ user_profile.username }}</h5>
+        <p class="text-muted mb-1">Full Stack Developer</p>
+        <p class="text-muted mb-2">Bay Area, San Francisco, CA</p>
+        {% if user.username != user_profile.username %}
+        <div class="d-flex justify-content-center mb-3">
+          <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary">Follow</button>
+          <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary ms-1">Message</button>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="card mb-4 mb-lg-0">
+      <div class="card-body p-0">
+        <ul class="list-group list-group-flush rounded-3">
+          <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+            <div class="d-flex align-items-center">
+              <i class="fas fa-globe fa-lg me-2"></i>
+              <p class="mb-0">Website</p>
+            </div>
+            <a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Add reference</a>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+            <div class="d-flex align-items-center">
+              <i class="fab fa-github fa-lg text-body me-2"></i>
+              <p class="mb-0">Github</p>
+            </div>
+            <a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Add reference</a>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+            <div class="d-flex align-items-center">
+              <i class="fa-brands fa-linkedin-in fa-lg" style="color: black; margin-right: 0.5rem;"></i>
+              <p class="mb-0">LinkedIn</p>
+            </div>
+            <a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Add reference</a>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+            <div class="d-flex align-items-center">
+                <i class="fa-solid fa-envelope" style="color: black; margin-right: 0.5rem;"></i>
+                <p class="mb-0">Email</p>
+            </div>
+            <a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Add reference</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-3">
+            <p class="mb-0">Full Name:</p>
+          </div>
+          <div class="col-sm-9">
+            <p class="text-muted mb-0">Johnatan Smith</p>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <p class="mb-0">All projects:</p>
+          </div>
+          <div class="col-sm-9">
+            <a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover mb-0" href="#">View</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card mb-3">
+      <div class="card-header text-center">
+        <p class="mb-0">Account Overview</p>
+      </div>
+      <div class="card-body">
+          <p class="mb-0">Some stats</p>
+          <p class="mb-0">Some stats</p>
+          <p class="mb-0">Some stats</p>
+          <p class="mb-0">Some stats</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 text-center align-items-center">
+          <p class="mb-3">Top projects:
+          </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card mb-4 mb-md-0">
+          <div class="card-body">
+            <p class="mb-4">Project:
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card mb-4 mb-md-0">
+          <div class="card-body">
+            <p class="mb-4">Project:
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}
+</body>

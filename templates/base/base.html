@@ -10,6 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" >
     <link href="{% static 'сss/style.css' %}" rel="stylesheet" >
+    <script src="https://kit.fontawesome.com/9636a4c14d.js" crossorigin="anonymous"></script>
     <title>{% block title %}Focus Flow{% endblock %}</title>
     {% block extra_head %}{% endblock %}
   </head>
@@ -18,7 +19,7 @@
         {% include 'base/navbar.html' %}
     </header>
 
-    <main class="pb-5">
+    <main class="pb-5 pt-5 mt-3">
         {% block content %}
 
         {% endblock %}
