@@ -4,7 +4,7 @@ from .forms import User
 
 class MySocialAccountAdapter(DefaultSocialAccountAdapter):
     def pre_social_login(self, request, sociallogin):
-        email = sociallogin.account.extra_data.get('email')
+        email = sociallogin.account.extra_data.get("email")
 
         if email:
             try:

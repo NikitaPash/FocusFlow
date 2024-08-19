@@ -23,7 +23,10 @@
     <option name="TEMPLATE_CONFIGURATION" value="Django" />
     <option name="TEMPLATE_FOLDERS">
       <list>
-        <option value="$MODULE_DIR$/../FocusFlow\templates" />
+        <option value="$MODULE_DIR$/templates" />
+        <option value="$MODULE_DIR$/templates/homepage_and_profile" />
+        <option value="$MODULE_DIR$/templates/user_auth" />
+        <option value="$MODULE_DIR$/templates/user_auth/forgot_password" />
       </list>
     </option>
   </component>

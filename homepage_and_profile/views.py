@@ -5,11 +5,11 @@ from user_auth.models import User
 
 
 def home(request):
-    return render(request, 'homepage_and_profile/homepage.html')
+    return render(request, "homepage_and_profile/homepage.html")
 
 
 @login_required
 def profile(request, username):
     user = get_object_or_404(User, username=username)
-    context = {'user_profile': user}
-    return render(request, 'homepage_and_profile/profile.html', context)
+    context = {"user_profile": user}
+    return render(request, "homepage_and_profile/profile.html", context)
