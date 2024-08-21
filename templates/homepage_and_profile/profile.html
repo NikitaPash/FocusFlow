@@ -9,58 +9,143 @@
 <div class="container py-3">
 <div class="row">
   <div class="col-lg-4">
-    <div class="card mb-4">
+    <div class="card shadow-sm mb-4">
       <div class="card-body text-center pb-0">
         <img src="{% static 'images/profile_placeholder.jpg' %}" alt="avatar"
         class="rounded-circle img-fluid" style="width: 250px;">
-        <h4 class="mb-0">Nikita Pashchuk</h4>
+        {% if user_profile.full_name %}
+        <h4 class="mb-0">{{ user_profile.full_name }}</h4>
+        {% endif %}
         <h5 class="text-muted mb-2">{{ username }}</h5>
-        <p class="text-muted mb-2">Bio</p>
+        {% if user_profile.bio %}
+        <p class="text-muted mb-2">{{ user_profile.bio }}</p>
+        {% endif %}
         {% if user.username != username %}
         <div class="d-flex justify-content-center mb-3">
-          <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary">Follow</button>
-          <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary ms-1">Message</button>
+          <button  type="button" class="btn btn-primary">Follow</button>
+          <button  type="button" class="btn btn-outline-primary ms-1">Message</button>
         </div>
         {% endif %}
       </div>
     </div>
-    <div class="card mb-4 mb-lg-0">
+
+    <div class="card mb-4 shadow-sm mb-lg-0">
       <div class="card-body p-0">
         <ul class="list-group list-group-flush rounded-3">
+          {% if user_profile.website %}
           <li class="list-group-item d-flex justify-content-between align-items-center p-3">
             <div class="d-flex align-items-center">
               <i class="fas fa-globe fa-lg me-2"></i>
-              <p class="mb-0">Website</p>
+              <p class="mb-0">{{ user_profile.website }}</p>
             </div>
             <a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Add reference</a>
           </li>
+          {% elif user_profile.github %} }
           <li class="list-group-item d-flex justify-content-between align-items-center p-3">
             <div class="d-flex align-items-center">
               <i class="fab fa-github fa-lg text-body me-2"></i>
-              <p class="mb-0">Github</p>
+              <p class="mb-0">{{ user_profile.github }}</p>
             </div>
             <a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Add reference</a>
           </li>
+          {% elif user_profile.linkedin %}
           <li class="list-group-item d-flex justify-content-between align-items-center p-3">
             <div class="d-flex align-items-center">
               <i class="fa-brands fa-linkedin-in fa-lg" style="color: black; margin-right: 0.5rem;"></i>
-              <p class="mb-0">LinkedIn</p>
+              <p class="mb-0">{{ user_profile.linkedin }}</p>
             </div>
             <a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Add reference</a>
           </li>
+          {% elif user_profile.email %}
           <li class="list-group-item d-flex justify-content-between align-items-center p-3">
             <div class="d-flex align-items-center">
                 <i class="fa-solid fa-envelope" style="color: black; margin-right: 0.5rem;"></i>
-                <p class="mb-0">Email</p>
+                <p class="mb-0">{{ user_profile.email }}</p>
             </div>
             <a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Add reference</a>
           </li>
+          {% endif %}
         </ul>
+        <div class="d-grid mx-auto">
+            <button type="button" name="edit_profile" id="editProfileButton" class="btn btn-dark btn-lg btn-block wider-button">
+                Edit Profile
+            </button>
+        </div>
       </div>
     </div>
+    {% if profile_form %}
+    <div class="card mt-3 shadow-sm justify-content-center">
+        <div class="card-body text-left" id="editProfileForm" style="display: none;">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group my-3">
+                    <label for="InputFullName">Name:</label>
+                    <input autocomplete="given-name" class="form-control" name="full_name" id="InputFullName" placeholder="Enter name" style="width: 100%;">
+                    {% if profile_form.errors.full_name %}
+                      <ul class="field-errors mb-0">
+                          {% for err in profile_form.errors.full_name %}
+                             <li class="text-danger">{{ err }}</li>
+                          {% endfor %}
+                      </ul>
+                    {% endif %}
+                </div>
+                <div class="form-group my-3">
+                    <label for="InputBio">Bio:</label>
+                    <input class="form-control" name="bio" id="InputBio" placeholder="Enter bio" style="width: 100%;">
+                    {% if profile_form.errors.bio %}
+                      <ul class="field-errors mb-0">
+                          {% for err in profile_form.errors.bio %}
+                             <li class="text-danger">{{ err }}</li>
+                          {% endfor %}
+                      </ul>
+                    {% endif %}
+                </div>
+                <div class="form-group my-3">
+                    <label for="InputWebsite">Website:</label>
+                    <input class="form-control" name="website" id="InputWebsite" placeholder="Enter website" style="width: 100%;">
+                    {% if profile_form.errors.website %}
+                      <ul class="field-errors mb-0">
+                          {% for err in profile_form.errors.website %}
+                             <li class="text-danger">{{ err }}</li>
+                          {% endfor %}
+                      </ul>
+                    {% endif %}
+                </div>
+                <div class="form-group my-3">
+                    <label for="InputGithub">Github:</label>
+                    <input class="form-control" name="github" id="InputGithub" placeholder="Enter github" style="width: 100%;">
+                    {% if profile_form.errors.github %}
+                      <ul class="field-errors mb-0">
+                          {% for err in profile_form.errors.github %}
+                             <li class="text-danger">{{ err }}</li>
+                          {% endfor %}
+                      </ul>
+                    {% endif %}
+                </div>
+                <div class="form-group my-3">
+                    <label for="InputLinkedIn">LinkedIn:</label>
+                    <input class="form-control" name="linkedin" id="InputLinkedIn" placeholder="Enter linkedIn" style="width: 100%;">
+                    {% if profile_form.errors.linkedin %}
+                      <ul class="field-errors mb-0">
+                          {% for err in profile_form.errors.linkedin %}
+                             <li class="text-danger">{{ err }}</li>
+                          {% endfor %}
+                      </ul>
+                    {% endif %}
+                </div>
+                <div class="form-group my-3">
+                    <label for="InputEmail">Email:</label>
+                    <input class="form-control" name="email" id="InputEmail" placeholder="Enter Email" style="width: 100%;">
+                </div>
+                <button type="submit" name="edit_profile_submit" class="btn btn-primary">Save Changes</button>
+                <button type="button" id="cancelButton" class="btn btn-secondary">Cancel</button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
   </div>
   <div class="col-lg-8">
-    <div class="card mb-3">
+    <div class="card shadow-sm mb-3">
       <div class="card-header text-center">
         <p class="mb-0">Account Overview</p>
       </div>
@@ -79,7 +164,7 @@
     </div>
     <div class="row">
       <div class="col-md-6">
-        <div class="card mb-4 mb-md-0">
+        <div class="card shadow-sm mb-4 mb-md-0">
           <div class="card-body">
             <p class="mb-4">Project:
             </p>
@@ -87,7 +172,7 @@
         </div>
       </div>
       <div class="col-md-6">
-        <div class="card mb-4 mb-md-0">
+        <div class="card shadow-sm mb-4 mb-md-0">
           <div class="card-body">
             <p class="mb-4">Project:
             </p>
@@ -98,5 +183,8 @@
   </div>
 </div>
 </div>
+{% endblock %}
+{% block extra_scripts %}
+    <script src="{% static 'js/edit_profile_button.js' %}"></script>
 {% endblock %}
 </body>

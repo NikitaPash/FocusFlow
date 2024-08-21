@@ -10,23 +10,19 @@ def home(request):
 
 
 @login_required
-def profile(request, user_id, profile_form=None):
-    user = get_object_or_404(User, pk=user_id)
-    context = {"username": user.username, "user_profile": user.profile}
+def profile(request, username):
+    if request.method == "POST":
+        profile_form = ProfileForm(request.POST, instance=request.user.profile)
+        if profile_form.is_valid():
+            profile_form.save()
+            return redirect("profile", username)
+    else:
+        profile_form = ProfileForm(instance=request.user.profile)
 
-    if profile_form:
-        context["profile_form"] = profile_form
-
+    user = get_object_or_404(User, username=username)
+    context = {
+        "username": username,
+        "user_profile": user.profile,
+        "profile_form": profile_form,
+    }
     return render(request, "homepage_and_profile/profile.html", context)
-
-
-@login_required
-def update_profile(request, user_id):
-    form = ProfileForm(request.POST or None)
-
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        return redirect("profile")
-
-    context = {"form": form}
-    return redirect("profile", profile_form=form)

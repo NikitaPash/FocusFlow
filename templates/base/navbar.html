@@ -42,7 +42,7 @@
                         <img src="{% static 'images/profile_placeholder.jpg' %}" width="30" height="30" class="d-inline-block align-top rounded-circle" alt="profile" loading="lazy">
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                        <li><a class="dropdown-item" href="{% url 'profile' user.id %}">Profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'profile' user.username %}">Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                     </ul>

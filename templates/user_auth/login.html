@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load socialaccount %}
+{% load static %}
 
 <head>
     <title>{% block title %}Login - Focus Flow{% endblock %}</title>
@@ -88,5 +89,8 @@
 </div>
 </div>
 </div>
+{% endblock %}
+{% block extra_scripts %}
+    <script src="{% static 'js/toggle_password.js' %}"></script>
 {% endblock %}
 </body>
