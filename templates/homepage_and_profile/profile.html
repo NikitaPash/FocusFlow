@@ -6,6 +6,7 @@
 </head>
 <body>
 {% block content %}
+    
 <div class="container py-3">
 <div class="row">
   <div class="col-lg-4">
@@ -13,14 +14,14 @@
       <div class="card-body text-center pb-0">
         <img src="{% static 'images/profile_placeholder.jpg' %}" alt="avatar"
         class="rounded-circle img-fluid" style="width: 250px;">
-        {% if user_profile.full_name %}
-        <h4 class="mb-0">{{ user_profile.full_name }}</h4>
+        {% if user.profile.full_name %}
+        <h4 class="mb-0">{{ user.profile.full_name }}</h4>
         {% endif %}
-        <h5 class="text-muted mb-2">{{ username }}</h5>
-        {% if user_profile.bio %}
-        <p class="text-muted mb-2">{{ user_profile.bio }}</p>
+        <h5 class="text-muted mb-2">{{ user.username }}</h5>
+        {% if user.profile.bio %}
+        <p class="text-muted mb-2">{{ user.profile.bio }}</p>
         {% endif %}
-        {% if user.username != username %}
+        {% if user != request.user %}
         <div class="d-flex justify-content-center mb-3">
           <button  type="button" class="btn btn-primary">Follow</button>
           <button  type="button" class="btn btn-outline-primary ms-1">Message</button>
@@ -29,53 +30,36 @@
       </div>
     </div>
 
+    {% with profile=user.profile %}
+    {% if profile.website or profile.github or profile.linkedin or profile.email %}
     <div class="card mb-4 shadow-sm mb-lg-0">
       <div class="card-body p-0">
         <ul class="list-group list-group-flush rounded-3">
-          {% if user_profile.website %}
-          <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+            {% for field in link_fields %}
+            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
             <div class="d-flex align-items-center">
-              <i class="fas fa-globe fa-lg me-2"></i>
-              <p class="mb-0">{{ user_profile.website }}</p>
+              <i class="{{ field.icon }} fa-lg me-2"></i>
+              <p class="mb-0">{{ field.name }}</p>
             </div>
-            <a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Add reference</a>
+            <a href="{{ field.link }}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Visit</a>
           </li>
-          {% elif user_profile.github %} }
-          <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-            <div class="d-flex align-items-center">
-              <i class="fab fa-github fa-lg text-body me-2"></i>
-              <p class="mb-0">{{ user_profile.github }}</p>
-            </div>
-            <a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Add reference</a>
-          </li>
-          {% elif user_profile.linkedin %}
-          <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-            <div class="d-flex align-items-center">
-              <i class="fa-brands fa-linkedin-in fa-lg" style="color: black; margin-right: 0.5rem;"></i>
-              <p class="mb-0">{{ user_profile.linkedin }}</p>
-            </div>
-            <a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Add reference</a>
-          </li>
-          {% elif user_profile.email %}
-          <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-            <div class="d-flex align-items-center">
-                <i class="fa-solid fa-envelope" style="color: black; margin-right: 0.5rem;"></i>
-                <p class="mb-0">{{ user_profile.email }}</p>
-            </div>
-            <a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Add reference</a>
-          </li>
-          {% endif %}
+          {% endfor %}
         </ul>
-        <div class="d-grid mx-auto">
-            <button type="button" name="edit_profile" id="editProfileButton" class="btn btn-dark btn-lg btn-block wider-button">
-                Edit Profile
-            </button>
-        </div>
       </div>
     </div>
+    {% endif %}
+    {% endwith %}
+
+    {% if request.user == user %}
+    <div class="d-grid mx-auto">
+        <button type="button" name="edit_profile" id="editProfileButton" class="btn btn-dark btn-lg btn-block wider-button mt-2">
+            Edit Profile
+        </button>
+    </div>
+    {% endif %}
     {% if profile_form %}
-    <div class="card mt-3 shadow-sm justify-content-center">
-        <div class="card-body text-left" id="editProfileForm" style="display: none;">
+    <div class="card mt-3 shadow-sm justify-content-center" id="editProfileForm"  style="display: none;">
+        <div class="card-body text-left">
             <form method="post">
                 {% csrf_token %}
                 <div class="form-group my-3">
@@ -136,6 +120,13 @@
                 <div class="form-group my-3">
                     <label for="InputEmail">Email:</label>
                     <input class="form-control" name="email" id="InputEmail" placeholder="Enter Email" style="width: 100%;">
+                    {% if profile_form.errors.email %}
+                      <ul class="field-errors mb-0">
+                          {% for err in profile_form.errors.email %}
+                             <li class="text-danger">{{ err }}</li>
+                          {% endfor %}
+                      </ul>
+                    {% endif %}
                 </div>
                 <button type="submit" name="edit_profile_submit" class="btn btn-primary">Save Changes</button>
                 <button type="button" id="cancelButton" class="btn btn-secondary">Cancel</button>

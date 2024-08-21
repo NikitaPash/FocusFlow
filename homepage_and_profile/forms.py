@@ -15,7 +15,6 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ("bio", "full_name", "website", "github", "linkedin", "email")
 
-
     def save(self, commit=True):
         instance = super().save(commit=False)
 
