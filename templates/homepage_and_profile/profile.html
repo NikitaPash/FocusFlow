@@ -12,14 +12,13 @@
   <div class="col-lg-4">
     <div class="card shadow-sm mb-4">
       <div class="card-body text-center pb-0">
-        <img src="{% static 'images/profile_placeholder.jpg' %}" alt="avatar"
-        class="rounded-circle img-fluid" style="width: 250px;">
+        <img src="{% if user.profile.profile_image %}{{ user.profile.profile_image.url }}{% else %}{% static 'images/profile_placeholder.jpg' %}{% endif %}" alt="Profile Picture" class="rounded-circle img-fluid" style="width: 250px;">
         {% if user.profile.full_name %}
-        <h4 class="mb-0">{{ user.profile.full_name }}</h4>
+        <h3 class="mb-0 mt-2">{{ user.profile.full_name }}</h3>
         {% endif %}
-        <h5 class="text-muted mb-2">{{ user.username }}</h5>
+        <h4 class="text-muted mb-1">{{ user.username }}</h4>
         {% if user.profile.bio %}
-        <p class="text-muted mb-2">{{ user.profile.bio }}</p>
+        <h5 class="mb-1">{{ user.profile.bio }}</h5>
         {% endif %}
         {% if user != request.user %}
         <div class="d-flex justify-content-center mb-3">
@@ -60,11 +59,23 @@
     {% if profile_form %}
     <div class="card mt-3 shadow-sm justify-content-center" id="editProfileForm"  style="display: none;">
         <div class="card-body text-left">
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
+                <div class="form-group mb-3">
+                  <label for="InputProfilePicture">Profile Picture:</label>
+                  <input value="{{ profile_form.profile_image.value|default_if_none:''}}" type="file" name="profile_image" id="InputProfilePicture" class="form-control" accept="media/images/">
+                  {% if profile_form.errors.profile_image %}
+                  <ul class="field-errors mb-0">
+                    {% for err in profile_form.errors.profile_image %}
+                    <li class="text-danger">{{ err }}</li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
+                </div>
                 <div class="form-group my-3">
                     <label for="InputFullName">Name:</label>
-                    <input autocomplete="given-name" class="form-control" name="full_name" id="InputFullName" placeholder="Enter name" style="width: 100%;">
+                    <input value="{{ profile_form.full_name.value|default_if_none:''}}" autocomplete="given-name" class="form-control" name="full_name" id="InputFullName" placeholder="Enter name" maxlength="30" style="width: 100%;" oninput="updateCharCount('InputFullName', 'fullNameCharCount', 30)">
+                    <small id="fullNameCharCount" class="form-text text-muted">0/30 characters</small>
                     {% if profile_form.errors.full_name %}
                       <ul class="field-errors mb-0">
                           {% for err in profile_form.errors.full_name %}
@@ -75,7 +86,9 @@
                 </div>
                 <div class="form-group my-3">
                     <label for="InputBio">Bio:</label>
-                    <input class="form-control" name="bio" id="InputBio" placeholder="Enter bio" style="width: 100%;">
+                    <textarea class="form-control" name="bio" id="InputBio" placeholder="Enter bio" maxlength="160"
+                          style="width: 100%;" oninput="updateCharCount('InputBio', 'bioCharCount', 160); resizeTextarea(this);">{{ profile_form.bio.value|default_if_none:'' }}</textarea>
+                    <small id="bioCharCount" class="form-text text-muted">0/160 characters</small>
                     {% if profile_form.errors.bio %}
                       <ul class="field-errors mb-0">
                           {% for err in profile_form.errors.bio %}
@@ -86,7 +99,7 @@
                 </div>
                 <div class="form-group my-3">
                     <label for="InputWebsite">Website:</label>
-                    <input class="form-control" name="website" id="InputWebsite" placeholder="Enter website" style="width: 100%;">
+                    <input value="{{ profile_form.website.value|default_if_none:''}}" class="form-control" name="website" id="InputWebsite" placeholder="Enter website" style="width: 100%;">
                     {% if profile_form.errors.website %}
                       <ul class="field-errors mb-0">
                           {% for err in profile_form.errors.website %}
@@ -97,7 +110,7 @@
                 </div>
                 <div class="form-group my-3">
                     <label for="InputGithub">Github:</label>
-                    <input class="form-control" name="github" id="InputGithub" placeholder="Enter github" style="width: 100%;">
+                    <input value="{{ profile_form.github.value|default_if_none:''}}" class="form-control" name="github" id="InputGithub" placeholder="Enter github" style="width: 100%;">
                     {% if profile_form.errors.github %}
                       <ul class="field-errors mb-0">
                           {% for err in profile_form.errors.github %}
@@ -108,7 +121,7 @@
                 </div>
                 <div class="form-group my-3">
                     <label for="InputLinkedIn">LinkedIn:</label>
-                    <input class="form-control" name="linkedin" id="InputLinkedIn" placeholder="Enter linkedIn" style="width: 100%;">
+                    <input value="{{ profile_form.linkedin.value|default_if_none:''}}" class="form-control" name="linkedin" id="InputLinkedIn" placeholder="Enter linkedIn" style="width: 100%;">
                     {% if profile_form.errors.linkedin %}
                       <ul class="field-errors mb-0">
                           {% for err in profile_form.errors.linkedin %}
@@ -119,7 +132,7 @@
                 </div>
                 <div class="form-group my-3">
                     <label for="InputEmail">Email:</label>
-                    <input class="form-control" name="email" id="InputEmail" placeholder="Enter Email" style="width: 100%;">
+                    <input value="{{ profile_form.email.value|default_if_none:''}}" class="form-control" name="email" id="InputEmail" placeholder="Enter Email" style="width: 100%;">
                     {% if profile_form.errors.email %}
                       <ul class="field-errors mb-0">
                           {% for err in profile_form.errors.email %}
@@ -128,7 +141,7 @@
                       </ul>
                     {% endif %}
                 </div>
-                <button type="submit" name="edit_profile_submit" class="btn btn-primary">Save Changes</button>
+                <button type="submit" name="edit_profile_submit" class="btn btn-dark">Save Changes</button>
                 <button type="button" id="cancelButton" class="btn btn-secondary">Cancel</button>
             </form>
         </div>
@@ -177,5 +190,6 @@
 {% endblock %}
 {% block extra_scripts %}
     <script src="{% static 'js/edit_profile_button.js' %}"></script>
+    <script src="{% static 'js/profile_form.js' %}"></script>
 {% endblock %}
 </body>

@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
+from copy import deepcopy
 
 from homepage_and_profile.forms import ProfileForm
 from user_auth.models import User
@@ -13,15 +14,19 @@ def home(request):
 @login_required
 def profile(request, username):
     user = get_object_or_404(User, username=username)
+    user_copy = deepcopy(user)
+
     if request.method == "POST":
-        if request.user != user:
+        if request.user == user:
+            profile_form = ProfileForm(request.POST, request.FILES, instance=user_copy.profile)
+            if profile_form.is_valid():
+                profile_form = ProfileForm(request.POST, request.FILES, instance=user.profile)
+                profile_form.save()
+                return redirect("profile", username)
+        else:
             raise PermissionDenied()
-        profile_form = ProfileForm(request.POST, instance=request.user.profile)
-        if profile_form.is_valid():
-            profile_form.save()
-            return redirect("profile", username)
     else:
-        profile_form = ProfileForm(instance=request.user.profile)
+        profile_form = ProfileForm(instance=user.profile)
 
     link_fields = [
         {"name": "Website", "icon": "fas fa-globe", "link": f"{user.profile.website}", },
@@ -32,6 +37,7 @@ def profile(request, username):
 
     link_fields = [item for item in link_fields if item["link"]]
 
+    user = get_object_or_404(User, username=username)
     context = {
         "link_fields": link_fields,
         "user": user,
