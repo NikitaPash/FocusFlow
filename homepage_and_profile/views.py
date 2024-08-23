@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from copy import deepcopy
 
-from homepage_and_profile.forms import ProfileForm
+from homepage_and_profile.forms import ProfileForm, EditUsernameForm
 from user_auth.models import User
 
 
@@ -19,14 +19,18 @@ def profile(request, username):
     if request.method == "POST":
         if request.user == user:
             profile_form = ProfileForm(request.POST, request.FILES, instance=user_copy.profile)
-            if profile_form.is_valid():
+            username_form = EditUsernameForm(request.POST, instance=user_copy)
+            if profile_form.is_valid() and username_form.is_valid():
                 profile_form = ProfileForm(request.POST, request.FILES, instance=user.profile)
+                username_form = EditUsernameForm(request.POST, instance=user)
                 profile_form.save()
-                return redirect("profile", username)
+                username_form.save()
+                return redirect("profile", user.username)
         else:
             raise PermissionDenied()
     else:
         profile_form = ProfileForm(instance=user.profile)
+        username_form = EditUsernameForm(instance=user)
 
     link_fields = [
         {"name": "Website", "icon": "fas fa-globe", "link": f"{user.profile.website}", },
@@ -42,5 +46,6 @@ def profile(request, username):
         "link_fields": link_fields,
         "user": user,
         "profile_form": profile_form,
+        "username_form": username_form,
     }
     return render(request, "homepage_and_profile/profile.html", context)

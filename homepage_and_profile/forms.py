@@ -1,5 +1,6 @@
 from django import forms
 
+from user_auth.models import User
 from .models import Profile
 
 
@@ -19,7 +20,6 @@ class ProfileForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
         fields_to_update = []
-
         for field in self.changed_data:
             if field in self.fields:
                 fields_to_update.append(field)
@@ -27,6 +27,27 @@ class ProfileForm(forms.ModelForm):
         if commit:
             if fields_to_update:
                 instance.save(update_fields=fields_to_update)
+            else:
+                instance.save()
+
+        return instance
+
+
+class EditUsernameForm(forms.ModelForm):
+    username = forms.CharField(required=False)
+
+    class Meta:
+        model = User
+        fields = ("username",)
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+
+        changed_username = [self.changed_data[0] if self.changed_data else '']
+
+        if commit:
+            if changed_username[0] != '':
+                instance.save(update_fields=changed_username)
             else:
                 instance.save()
 
