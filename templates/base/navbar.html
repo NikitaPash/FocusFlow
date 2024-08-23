@@ -2,62 +2,73 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>FocusFlow</title>
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <a class="navbar-brand ms-2" href="/">
-        <img src="{% static 'images/favicon.png' %}" width="30" height="30" class="d-inline-block align-top rounded-circle" alt="" loading="lazy">
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand ms-2" href="/">
+        <img src="{% static 'images/favicon.png' %}" width="30" height="30"
+             class="d-inline-block align-top rounded-circle" alt="" loading="lazy">
         FocusFlow
-      </a>
-      <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    </a>
+    <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto">
-          <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Projects
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">My projects</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Create project</a></li>
-              </ul>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Forum</a>
-          </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                   aria-expanded="false">
+                    Projects
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">My projects</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="#">Create project</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Forum</a>
+            </li>
         </ul>
         <ul class="navbar-nav ms-auto">
             {% if request.user.is_authenticated %}
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Welcome, {{ request.user.username }}!</a>
-            </li>
-            <li class="nav-item dropdown" data-bs-theme="dark">
-                    <button class="btn btn-dark dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="{% static 'images/profile_placeholder.jpg' %}" width="30" height="30" class="d-inline-block align-top rounded-circle" alt="profile" loading="lazy">
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Welcome, {{ request.user.username }}!</a>
+                </li>
+                <li class="nav-item dropdown" data-bs-theme="dark">
+                    <button class="btn btn-dark dropdown-toggle" type="button" id="profileDropdown"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{% static 'images/profile_placeholder.jpg' %}" width="30" height="30"
+                             class="d-inline-block align-top rounded-circle" alt="profile" loading="lazy">
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                         <li><a class="dropdown-item" href="{% url 'profile' request.user.username %}">Profile</a></li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                     </ul>
-            </li>
+                </li>
             {% else %}
-            <li class="nav-item">
-                <a href="{% url 'login' %}">
-                    <button class="btn btn-dark" type="button">
-                        <img src="{% static 'images/profile_placeholder.jpg' %}" width="30" height="30" class="d-inline-block align-top rounded-circle" alt="profile" loading="lazy">
-                    </button>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="{% url 'login' %}">
+                        <button class="btn btn-dark" type="button">
+                            <img src="{% static 'images/profile_placeholder.jpg' %}" width="30" height="30"
+                                 class="d-inline-block align-top rounded-circle" alt="profile" loading="lazy">
+                        </button>
+                    </a>
+                </li>
             {% endif %}
         </ul>
-      </div>
-    </nav>
-  </body>
+    </div>
+</nav>
+</body>
 </html>

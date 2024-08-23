@@ -6,198 +6,221 @@
 </head>
 <body>
 {% block content %}
-    
-<div class="container py-3">
-<div class="row">
-  <div class="col-lg-4">
-    <div class="card shadow-sm mb-4">
-      <div class="card-body text-center pb-0">
-        <img src="{% if user.profile.profile_image %}{{ user.profile.profile_image.url }}{% else %}{% static 'images/profile_placeholder.jpg' %}{% endif %}" alt="Profile Picture" class="rounded-circle img-fluid" style="width: 250px;">
-        {% if user.profile.full_name %}
-        <h3 class="mb-0 mt-2">{{ user.profile.full_name }}</h3>
-        {% endif %}
-        <h4 class="text-muted mb-1">{{ user.username }}</h4>
-        {% if user.profile.bio %}
-        <h5 class="mb-1">{{ user.profile.bio }}</h5>
-        {% endif %}
-        {% if user != request.user %}
-        <div class="d-flex justify-content-center mb-3">
-          <button  type="button" class="btn btn-primary">Follow</button>
-          <button  type="button" class="btn btn-outline-primary ms-1">Message</button>
-        </div>
-        {% endif %}
-      </div>
-    </div>
 
-    {% with profile=user.profile %}
-    {% if profile.website or profile.github or profile.linkedin or profile.email %}
-    <div class="card mb-4 shadow-sm mb-lg-0">
-      <div class="card-body p-0">
-        <ul class="list-group list-group-flush rounded-3">
-            {% for field in link_fields %}
-            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-            <div class="d-flex align-items-center">
-              <i class="{{ field.icon }} fa-lg me-2"></i>
-              <p class="mb-0">{{ field.name }}</p>
+    <div class="container py-3">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card shadow-sm mb-2">
+                    <div class="card-body text-center pb-2">
+                        <img src="{% if user.profile.profile_image %}{{ user.profile.profile_image.url }}
+                                  {% else %}{% static 'images/profile_placeholder.jpg' %}{% endif %}"
+                             alt="Profile Picture" class="rounded-circle img-fluid" style="width: 250px;">
+                        {% if user.profile.full_name %}
+                            <h3 class="mb-0 mt-2">{{ user.profile.full_name }}</h3>
+                        {% endif %}
+                        <h4 class="text-muted mb-1">{{ user.username }}</h4>
+                        {% if user.profile.bio %}
+                            <h5 class="mb-1">{{ user.profile.bio }}</h5>
+                        {% endif %}
+                        {% if user != request.user %}
+                            <div class="d-flex justify-content-center mb-3">
+                                <button type="button" class="btn btn-primary">Follow</button>
+                                <button type="button" class="btn btn-outline-primary ms-1">Message</button>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% with profile=user.profile %}
+                    {% if profile.website or profile.github or profile.linkedin or profile.email %}
+                        <div class="card mb-4 shadow-sm mb-lg-0">
+                            <div class="card-body p-0">
+                                <ul class="list-group list-group-flush rounded-3">
+                                    {% for field in link_fields %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                            <div class="d-flex align-items-center">
+                                                <i class="{{ field.icon }} fa-lg me-2"></i>
+                                                <p class="mb-0">{{ field.name }}</p>
+                                            </div>
+                                            <a href="{{ field.link }}"
+                                               class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Visit</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                {% if request.user == user %}
+                    <div class="d-grid mx-auto">
+                        <button type="button" name="edit_profile" id="editProfileButton"
+                                class="btn btn-dark btn-lg btn-block wider-button mt-2">
+                            Edit Profile
+                        </button>
+                    </div>
+                {% endif %}
+                {% if profile_form %}
+                    <div class="card mt-3 shadow-sm justify-content-center" id="editProfileForm" style="display: none;">
+                        <div class="card-body text-left">
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="form-group mb-3">
+                                    <label for="InputProfilePicture">Profile Picture:</label>
+                                    <input value="{{ profile_form.profile_image.value|default_if_none:'' }}" type="file"
+                                           name="profile_image" id="InputProfilePicture" class="form-control"
+                                           accept="media/images/">
+                                    {% if profile_form.errors.profile_image %}
+                                        <ul class="field-errors mb-0">
+                                            {% for err in profile_form.errors.profile_image %}
+                                                <li class="text-danger">{{ err }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group my-3">
+                                    <label for="InputUsername">Username::</label>
+                                    <input value="{{ username_form.username.value|default_if_none:'' }}"
+                                           class="form-control" name="username" id="InputUsername"
+                                           placeholder="Enter Username" style="width: 100%;">
+                                    {% if username_form.errors.username %}
+                                        <ul class="field-errors mb-0">
+                                            {% for err in username_form.errors.username %}
+                                                <li class="text-danger">{{ err }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group my-3">
+                                    <label for="InputFullName">Name:</label>
+                                    <input value="{{ profile_form.full_name.value|default_if_none:'' }}"
+                                           autocomplete="given-name" class="form-control" name="full_name"
+                                           id="InputFullName" placeholder="Enter name" maxlength="30"
+                                           style="width: 100%;"
+                                           oninput="updateCharCount('InputFullName', 'fullNameCharCount', 30)">
+                                    <small id="fullNameCharCount" class="form-text text-muted">0/30 characters</small>
+                                    {% if profile_form.errors.full_name %}
+                                        <ul class="field-errors mb-0">
+                                            {% for err in profile_form.errors.full_name %}
+                                                <li class="text-danger">{{ err }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group my-3">
+                                    <label for="InputBio">Bio:</label>
+                                    <textarea class="form-control" name="bio" id="InputBio" placeholder="Enter bio"
+                                              maxlength="160"
+                                              style="width: 100%;"
+                                              oninput="updateCharCount('InputBio', 'bioCharCount', 160); resizeTextarea(this);">{{ profile_form.bio.value|default_if_none:'' }}</textarea>
+                                    <small id="bioCharCount" class="form-text text-muted">0/160 characters</small>
+                                    {% if profile_form.errors.bio %}
+                                        <ul class="field-errors mb-0">
+                                            {% for err in profile_form.errors.bio %}
+                                                <li class="text-danger">{{ err }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group my-3">
+                                    <label for="InputWebsite">Website:</label>
+                                    <input value="{{ profile_form.website.value|default_if_none:'' }}"
+                                           class="form-control" name="website" id="InputWebsite"
+                                           placeholder="Enter website" style="width: 100%;">
+                                    {% if profile_form.errors.website %}
+                                        <ul class="field-errors mb-0">
+                                            {% for err in profile_form.errors.website %}
+                                                <li class="text-danger">{{ err }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group my-3">
+                                    <label for="InputGithub">Github:</label>
+                                    <input value="{{ profile_form.github.value|default_if_none:'' }}"
+                                           class="form-control" name="github" id="InputGithub"
+                                           placeholder="Enter github" style="width: 100%;">
+                                    {% if profile_form.errors.github %}
+                                        <ul class="field-errors mb-0">
+                                            {% for err in profile_form.errors.github %}
+                                                <li class="text-danger">{{ err }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group my-3">
+                                    <label for="InputLinkedIn">LinkedIn:</label>
+                                    <input value="{{ profile_form.linkedin.value|default_if_none:'' }}"
+                                           class="form-control" name="linkedin" id="InputLinkedIn"
+                                           placeholder="Enter linkedIn" style="width: 100%;">
+                                    {% if profile_form.errors.linkedin %}
+                                        <ul class="field-errors mb-0">
+                                            {% for err in profile_form.errors.linkedin %}
+                                                <li class="text-danger">{{ err }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group my-3">
+                                    <label for="InputEmail">Email:</label>
+                                    <input value="{{ profile_form.email.value|default_if_none:'' }}"
+                                           class="form-control" name="email" id="InputEmail" placeholder="Enter Email"
+                                           style="width: 100%;">
+                                    {% if profile_form.errors.email %}
+                                        <ul class="field-errors mb-0">
+                                            {% for err in profile_form.errors.email %}
+                                                <li class="text-danger">{{ err }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <button type="submit" name="edit_profile_submit" class="btn btn-dark">Save Changes
+                                </button>
+                                <button type="button" id="cancelButton" class="btn btn-secondary">Cancel</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
-            <a href="{{ field.link }}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Visit</a>
-          </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
-    {% endif %}
-    {% endwith %}
-
-    {% if request.user == user %}
-    <div class="d-grid mx-auto">
-        <button type="button" name="edit_profile" id="editProfileButton" class="btn btn-dark btn-lg btn-block wider-button mt-2">
-            Edit Profile
-        </button>
-    </div>
-    {% endif %}
-    {% if profile_form %}
-    <div class="card mt-3 shadow-sm justify-content-center" id="editProfileForm"  style="display: none;">
-        <div class="card-body text-left">
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-group mb-3">
-                  <label for="InputProfilePicture">Profile Picture:</label>
-                  <input value="{{ profile_form.profile_image.value|default_if_none:''}}" type="file" name="profile_image" id="InputProfilePicture" class="form-control" accept="media/images/">
-                  {% if profile_form.errors.profile_image %}
-                  <ul class="field-errors mb-0">
-                    {% for err in profile_form.errors.profile_image %}
-                    <li class="text-danger">{{ err }}</li>
-                    {% endfor %}
-                  </ul>
-                  {% endif %}
+            <div class="col-lg-8">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-header text-center">
+                        <p class="mb-0">Account Overview</p>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0">Some stats</p>
+                        <p class="mb-0">Some stats</p>
+                        <p class="mb-0">Some stats</p>
+                        <p class="mb-0">Some stats</p>
+                    </div>
                 </div>
-                <div class="form-group my-3">
-                    <label for="InputUsername">Username::</label>
-                    <input value="{{ username_form.username.value|default_if_none:''}}" class="form-control" name="username" id="InputUsername" placeholder="Enter Username" style="width: 100%;">
-                    {% if username_form.errors.username %}
-                      <ul class="field-errors mb-0">
-                          {% for err in username_form.errors.username %}
-                             <li class="text-danger">{{ err }}</li>
-                          {% endfor %}
-                      </ul>
-                    {% endif %}
+                <div class="row">
+                    <div class="col-12 text-center align-items-center">
+                        <p class="mb-3">Top projects:
+                        </p>
+                    </div>
                 </div>
-                <div class="form-group my-3">
-                    <label for="InputFullName">Name:</label>
-                    <input value="{{ profile_form.full_name.value|default_if_none:''}}" autocomplete="given-name" class="form-control" name="full_name" id="InputFullName" placeholder="Enter name" maxlength="30" style="width: 100%;" oninput="updateCharCount('InputFullName', 'fullNameCharCount', 30)">
-                    <small id="fullNameCharCount" class="form-text text-muted">0/30 characters</small>
-                    {% if profile_form.errors.full_name %}
-                      <ul class="field-errors mb-0">
-                          {% for err in profile_form.errors.full_name %}
-                             <li class="text-danger">{{ err }}</li>
-                          {% endfor %}
-                      </ul>
-                    {% endif %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card shadow-sm mb-4 mb-md-0">
+                            <div class="card-body">
+                                <p class="mb-4">Project:
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card shadow-sm mb-4 mb-md-0">
+                            <div class="card-body">
+                                <p class="mb-4">Project:
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group my-3">
-                    <label for="InputBio">Bio:</label>
-                    <textarea class="form-control" name="bio" id="InputBio" placeholder="Enter bio" maxlength="160"
-                          style="width: 100%;" oninput="updateCharCount('InputBio', 'bioCharCount', 160); resizeTextarea(this);">{{ profile_form.bio.value|default_if_none:'' }}</textarea>
-                    <small id="bioCharCount" class="form-text text-muted">0/160 characters</small>
-                    {% if profile_form.errors.bio %}
-                      <ul class="field-errors mb-0">
-                          {% for err in profile_form.errors.bio %}
-                             <li class="text-danger">{{ err }}</li>
-                          {% endfor %}
-                      </ul>
-                    {% endif %}
-                </div>
-                <div class="form-group my-3">
-                    <label for="InputWebsite">Website:</label>
-                    <input value="{{ profile_form.website.value|default_if_none:''}}" class="form-control" name="website" id="InputWebsite" placeholder="Enter website" style="width: 100%;">
-                    {% if profile_form.errors.website %}
-                      <ul class="field-errors mb-0">
-                          {% for err in profile_form.errors.website %}
-                             <li class="text-danger">{{ err }}</li>
-                          {% endfor %}
-                      </ul>
-                    {% endif %}
-                </div>
-                <div class="form-group my-3">
-                    <label for="InputGithub">Github:</label>
-                    <input value="{{ profile_form.github.value|default_if_none:''}}" class="form-control" name="github" id="InputGithub" placeholder="Enter github" style="width: 100%;">
-                    {% if profile_form.errors.github %}
-                      <ul class="field-errors mb-0">
-                          {% for err in profile_form.errors.github %}
-                             <li class="text-danger">{{ err }}</li>
-                          {% endfor %}
-                      </ul>
-                    {% endif %}
-                </div>
-                <div class="form-group my-3">
-                    <label for="InputLinkedIn">LinkedIn:</label>
-                    <input value="{{ profile_form.linkedin.value|default_if_none:''}}" class="form-control" name="linkedin" id="InputLinkedIn" placeholder="Enter linkedIn" style="width: 100%;">
-                    {% if profile_form.errors.linkedin %}
-                      <ul class="field-errors mb-0">
-                          {% for err in profile_form.errors.linkedin %}
-                             <li class="text-danger">{{ err }}</li>
-                          {% endfor %}
-                      </ul>
-                    {% endif %}
-                </div>
-                <div class="form-group my-3">
-                    <label for="InputEmail">Email:</label>
-                    <input value="{{ profile_form.email.value|default_if_none:''}}" class="form-control" name="email" id="InputEmail" placeholder="Enter Email" style="width: 100%;">
-                    {% if profile_form.errors.email %}
-                      <ul class="field-errors mb-0">
-                          {% for err in profile_form.errors.email %}
-                             <li class="text-danger">{{ err }}</li>
-                          {% endfor %}
-                      </ul>
-                    {% endif %}
-                </div>
-                <button type="submit" name="edit_profile_submit" class="btn btn-dark">Save Changes</button>
-                <button type="button" id="cancelButton" class="btn btn-secondary">Cancel</button>
-            </form>
+            </div>
         </div>
     </div>
-    {% endif %}
-  </div>
-  <div class="col-lg-8">
-    <div class="card shadow-sm mb-3">
-      <div class="card-header text-center">
-        <p class="mb-0">Account Overview</p>
-      </div>
-      <div class="card-body">
-          <p class="mb-0">Some stats</p>
-          <p class="mb-0">Some stats</p>
-          <p class="mb-0">Some stats</p>
-          <p class="mb-0">Some stats</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12 text-center align-items-center">
-          <p class="mb-3">Top projects:
-          </p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card shadow-sm mb-4 mb-md-0">
-          <div class="card-body">
-            <p class="mb-4">Project:
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card shadow-sm mb-4 mb-md-0">
-          <div class="card-body">
-            <p class="mb-4">Project:
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
 {% endblock %}
 {% block extra_scripts %}
     <script src="{% static 'js/edit_profile_button.js' %}"></script>

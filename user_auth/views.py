@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, logout
+from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.models import auth
 from django.urls import reverse_lazy
 
@@ -14,8 +14,13 @@ def register_view(request):
     form = CreateUserForm(request.POST or None)
 
     if request.method == "POST" and form.is_valid():
-        form.save()
-        return redirect("login")
+        new_user = form.save()
+        new_user = authenticate(
+            username=form.cleaned_data["username"],
+            password=form.cleaned_data["password1"],
+        )
+        login(request, new_user)
+        return redirect("home")
 
     context = {"registerform": form}
 

@@ -18,10 +18,14 @@ def profile(request, username):
 
     if request.method == "POST":
         if request.user == user:
-            profile_form = ProfileForm(request.POST, request.FILES, instance=user_copy.profile)
+            profile_form = ProfileForm(
+                request.POST, request.FILES, instance=user_copy.profile
+            )
             username_form = EditUsernameForm(request.POST, instance=user_copy)
             if profile_form.is_valid() and username_form.is_valid():
-                profile_form = ProfileForm(request.POST, request.FILES, instance=user.profile)
+                profile_form = ProfileForm(
+                    request.POST, request.FILES, instance=user.profile
+                )
                 username_form = EditUsernameForm(request.POST, instance=user)
                 profile_form.save()
                 username_form.save()
@@ -33,10 +37,22 @@ def profile(request, username):
         username_form = EditUsernameForm(instance=user)
 
     link_fields = [
-        {"name": "Website", "icon": "fas fa-globe", "link": f"{user.profile.website}", },
+        {
+            "name": "Website",
+            "icon": "fas fa-globe",
+            "link": f"{user.profile.website}",
+        },
         {"name": "GitHub", "icon": "fab fa-github", "link": f"{user.profile.github}"},
-        {"name": "LinkedIn", "icon": "fa-brands fa-linkedin-in", "link": f"{user.profile.linkedin}"},
-        {"name": "Email", "icon": "fa-solid fa-envelope", "link": f"mailto:{user.profile.email}"}
+        {
+            "name": "LinkedIn",
+            "icon": "fa-brands fa-linkedin-in",
+            "link": f"{user.profile.linkedin}",
+        },
+        {
+            "name": "Email",
+            "icon": "fa-solid fa-envelope",
+            "link": f"mailto:{user.profile.email}",
+        },
     ]
 
     link_fields = [item for item in link_fields if item["link"]]

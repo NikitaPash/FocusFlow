@@ -15,7 +15,15 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ("bio", "full_name", "website", "github", "linkedin", "email", "profile_image")
+        fields = (
+            "bio",
+            "full_name",
+            "website",
+            "github",
+            "linkedin",
+            "email",
+            "profile_image",
+        )
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -43,10 +51,10 @@ class EditUsernameForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
 
-        changed_username = [self.changed_data[0] if self.changed_data else '']
+        changed_username = [self.changed_data[0] if self.changed_data else ""]
 
         if commit:
-            if changed_username[0] != '':
+            if changed_username[0] != "":
                 instance.save(update_fields=changed_username)
             else:
                 instance.save()

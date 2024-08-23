@@ -7,88 +7,93 @@
 </head>
 <body>
 {% block content %}
-<!-- Login -->
+    <!-- Login -->
     <div class="row justify-content-center mx-auto">
         <div class="col-md-6">
             <div class="card mt-3 shadow">
-              <div class="card-header text-center">
-                  Login
-              </div>
-              <div class="card-body text-left">
-                <form method="POST" autocomplete="off">
-                  {% csrf_token %}
-                  <div class="form-group my-3">
-                    <label for="InputLoginEmail">Email</label>
-                    {% include 'components/email_field.html' with field=loginform %}
-                  </div>
-                  <div class="form-group my-3">
-                      <label for="InputPassword">Password</label>
-                      {% include 'components/password_field.html' with field=loginform.password %}
-                      {% if loginform.non_field_errors %}
-                        <ul class="non-field-errors mb-0">
-                          {% for err in loginform.non_field_errors %}
-                            <li class="text-danger">{{ err }}</li>
-                          {% endfor %}
-                        </ul>
-                      {% endif %}
-                  </div>
-                  <div class="d-flex justify-content-between align-items-center">
-                  <div class="form-check">
-                      <label class="form-check-label" for="RememberCheck">
-                          Remember me
-                      </label>
-                      {{loginform.remember_me}}
-                  </div>
-                  <a href="#PassResetModal" data-bs-toggle="modal" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Forgot password?</a>
-                  </div>
-                  <div class="d-grid col-6 mx-auto text-center mt-2">
-                      <button type="submit" name='login_submit' class="btn btn-dark">Submit</button>
-                  </div>
-                </form>
-                <div class="card-footer text-body-secondary text-center mt-3">
-                   Don't have an account?
-                   <a href="{% url 'register' %}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Create New Account</a>
-                   {% include 'components/social_login_button.html' %}
+                <div class="card-header text-center">
+                    Login
                 </div>
-              </div>
+                <div class="card-body text-left">
+                    <form method="POST" autocomplete="off">
+                        {% csrf_token %}
+                        <div class="form-group my-3">
+                            <label for="InputLoginEmail">Email</label>
+                            {% include 'components/email_field.html' with field=loginform %}
+                        </div>
+                        <div class="form-group my-3">
+                            <label for="InputPassword">Password</label>
+                            {% include 'components/password_field.html' with field=loginform.password %}
+                            {% if loginform.non_field_errors %}
+                                <ul class="non-field-errors mb-0">
+                                    {% for err in loginform.non_field_errors %}
+                                        <li class="text-danger">{{ err }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="form-check">
+                                <label class="form-check-label" for="RememberCheck">
+                                    Remember me
+                                </label>
+                                {{ loginform.remember_me }}
+                            </div>
+                            <a href="#PassResetModal" data-bs-toggle="modal"
+                               class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Forgot
+                                password?</a>
+                        </div>
+                        <div class="d-grid col-6 mx-auto text-center mt-2">
+                            <button type="submit" name='login_submit' class="btn btn-dark">Submit</button>
+                        </div>
+                    </form>
+                    <div class="card-footer text-body-secondary text-center mt-3">
+                        Don't have an account?
+                        <a href="{% url 'register' %}"
+                           class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Create
+                            New Account</a>
+                        {% include 'components/social_login_button.html' %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-<!-- Modal -->
-<div class="modal fade" id="PassResetModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered">
-<div class="modal-content">
-  <div class="card">
-      <div class="modal-header pt-7">
-          <div class="d-flex justify-content-between w-100">
-              <div>
-                  <h1 class="modal-title fs-5 mb-2" id="exampleModalLabel">Forgot password?</h1>
-                  <h6 class="card-subtitle text-body-secondary">We’ll send you a link to reset your password.</h6>
-              </div>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-      </div>
-      <form method="POST" autocomplete="off">
-          {% csrf_token %}
-      <div class="modal-body pb-0 pt-0">
-        <div class="card-body text-left pt-0">
-            <div class="form-group my-2">
-              <label for="InputResetEmail" class="mb-2">Enter email:</label>
-              {% include 'components/email_field.html' with field=reset_form %}
+    <!-- Modal -->
+    <div class="modal fade" id="PassResetModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="card">
+                    <div class="modal-header pt-7">
+                        <div class="d-flex justify-content-between w-100">
+                            <div>
+                                <h1 class="modal-title fs-5 mb-2" id="exampleModalLabel">Forgot password?</h1>
+                                <h6 class="card-subtitle text-body-secondary">We’ll send you a link to reset your
+                                    password.</h6>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    <form method="POST" autocomplete="off">
+                        {% csrf_token %}
+                        <div class="modal-body pb-0 pt-0">
+                            <div class="card-body text-left pt-0">
+                                <div class="form-group my-2">
+                                    <label for="InputResetEmail" class="mb-2">Enter email:</label>
+                                    {% include 'components/email_field.html' with field=reset_form %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="d-grid col-4 mx-auto text-center">
+                                <button type="submit" name="reset_submit" class="btn btn-dark">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <div class="d-grid col-4 mx-auto text-center">
-            <button type="submit" name="reset_submit" class="btn btn-dark">Submit</button>
-        </div>
-      </div>
-      </form>
-  </div>
-</div>
-</div>
-</div>
+    </div>
 {% endblock %}
 {% block extra_scripts %}
     <script src="{% static 'js/toggle_password.js' %}"></script>
