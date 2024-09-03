@@ -42,7 +42,7 @@ class ProfileForm(forms.ModelForm):
 
 
 class EditUsernameForm(forms.ModelForm):
-    username = forms.CharField(required=False)
+    username = forms.CharField()
 
     class Meta:
         model = User
