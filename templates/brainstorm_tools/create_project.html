@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
 <head>
     <title>{% block title %}Create Project - Focus Flow{% endblock %}</title>
@@ -22,22 +23,44 @@
                             <label for="InputDescription">Description</label>
                             {{ project_form.description }}
                         </div>
-                        {{ feature_formset.management_form }}
-                        {% for form in feature_formset %}
+
                         <div class="form-group my-3">
-                            <label for="InputFeatureName">Feature</label>
-                                {{ form.feature_name }}
-                                    {{ subfeature_formset.management_form }}
-                                    {% for subfeature_form in subfeature_formset %}
-                                        <ul class="form-group my-2 mx-4">
-                                            <li>
-                                            <label for="InputSubFeature">Subfeature</label>
-                                            {{ subfeature_form.subfeature_name }}
-                                            </li>
-                                        </ul>
-                                    {% endfor %}
-                            {% endfor %}
+                            <label for="InputFeatureName" class="mb-2">Features:</label>
+                            <button type="button" class="link-primary link-offset-2 text-decoration-none opacity-75"
+                                    onclick="addFeature()"
+                                    style="background: none; border: none; padding: 0; font: inherit; cursor: pointer;">
+                                <span>&#43; Add Feature</span>
+                            </button>
+
+                            <div id="feature-forms">
+                                {% for feature_name_field in project_form.feature_fields %}
+                                    <div class="mb-3">
+                                        <label class="d-block">Feature</label>
+                                        {{ feature_name_field }}
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <label class="subfeature-label mb-0">Subfeatures</label>
+                                        <button type="button"
+                                                class="link-primary link-offset-2 text-decoration-none opacity-75"
+                                                onclick="addSubFeature({{ forloop.counter0 }})"
+                                                style="background: none; border: none; padding: 0; font: inherit; cursor: pointer;">
+                                            + Add SubFeature
+                                        </button>
+                                    </div>
+
+                                    <div id="subfeature-container-{{ forloop.counter0 }}" style="margin-left: 20px;">
+                                        {% for subfeature_name_field in feature_form.subfeature_fields %}
+                                            <div class="mb-2" style="margin-left: 20px;">
+                                                {{ subfeature_name_field }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
+
+
                         <div class="d-grid col-6 mx-auto text-center">
                             <button type="submit" class="btn btn-dark">Submit</button>
                         </div>
@@ -46,5 +69,7 @@
             </div>
         </div>
     </div>
+    <script src="{% static 'js/dynamic_fields.js' %}"></script>
+
 {% endblock %}
 </body>
