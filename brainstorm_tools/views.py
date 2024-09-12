@@ -33,8 +33,6 @@ def create_project(request):
                     if key.startswith(subfeatures_key)
                 ]
 
-                print(f"Feature: {feature_name}, Subfeatures: {subfeatures}")
-
                 for subfeature_name in subfeatures:
                     if subfeature_name.strip():
                         SubFeature.objects.create(

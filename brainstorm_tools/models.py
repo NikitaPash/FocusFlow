@@ -5,8 +5,8 @@ from user_auth.models import User
 
 class Project(models.Model):
     user = models.ForeignKey(User, related_name="projects", on_delete=models.CASCADE)
-    title = models.CharField(max_length=255)
-    description = models.TextField(max_length=350)
+    title = models.CharField(max_length=255, unique=True)
+    description = models.TextField(max_length=350, unique=True)
 
 
 class Feature(models.Model):
