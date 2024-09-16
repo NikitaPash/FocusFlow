@@ -27,7 +27,7 @@
                     Projects
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">My projects</a></li>
+                    <li><a class="dropdown-item" href="{% url 'view_projects' request.user.username %}">My projects</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>

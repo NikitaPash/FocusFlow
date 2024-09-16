@@ -18,24 +18,13 @@
                         <div class="form-group my-3">
                             <label for="InputTitle">Title</label>
                             {{ project_form.title }}
-                            {% if project_form.title.errors %}
-                                <ul class="field-errors mb-0">
-                                    {% for err in project_form.title.errors %}
-                                        <li class="text-danger">{{ err }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
+                            <small id="TitleCharCount" class="form-text text-muted">0/100 characters</small>
                         </div>
+
                         <div class="form-group my-3">
                             <label for="InputDescription">Description</label>
                             {{ project_form.description }}
-                            {% if project_form.description.errors %}
-                                <ul class="field-errors mb-0">
-                                    {% for err in project_form.description.errors %}
-                                        <li class="text-danger">{{ err }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
+                            <small id="DescriptionCharCount" class="form-text text-muted">0/350 characters</small>
                         </div>
 
                         <div class="form-group my-3">
@@ -47,33 +36,8 @@
                             </button>
 
                             <div id="feature-forms">
-                                {% for feature_name_field in project_form.feature_fields %}
-                                    <div class="mb-3">
-                                        <label class="d-block">Feature</label>
-                                        {{ feature_name_field }}
-                                    </div>
-
-                                    <div class="d-flex justify-content-between align-items-center mt-2">
-                                        <label class="subfeature-label mb-0">Subfeatures</label>
-                                        <button type="button"
-                                                class="link-primary link-offset-2 text-decoration-none opacity-75"
-                                                onclick="addSubFeature({{ forloop.counter0 }})"
-                                                style="background: none; border: none; padding: 0; font: inherit; cursor: pointer;">
-                                            + Add SubFeature
-                                        </button>
-                                    </div>
-
-                                    <div id="subfeature-container-{{ forloop.counter0 }}" style="margin-left: 20px;">
-                                        {% for subfeature_name_field in feature_form.subfeature_fields %}
-                                            <div class="mb-2" style="margin-left: 20px;">
-                                                {{ subfeature_name_field }}
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                {% endfor %}
                             </div>
                         </div>
-
 
                         <div class="d-grid col-6 mx-auto text-center">
                             <button type="submit" class="btn btn-dark">Submit</button>
@@ -84,6 +48,6 @@
         </div>
     </div>
     <script src="{% static 'js/dynamic_fields.js' %}"></script>
-
+    <script src="{% static 'js/profile_form.js' %}"></script>
 {% endblock %}
 </body>

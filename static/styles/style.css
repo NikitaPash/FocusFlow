@@ -22,3 +22,26 @@
     background-color: #6c757d;
     color: #ffffff;
 }
+
+
+/* base.css */
+
+.project-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #343a40;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    transition: color 0.3s ease;
+}
+
+.project-title:hover {
+    color: #007bff;
+}
+
+.project-description {
+    font-size: 1rem;
+    color: #6c757d;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
