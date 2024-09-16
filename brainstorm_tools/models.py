@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from user_auth.models import User
 
@@ -7,6 +8,7 @@ class Project(models.Model):
     user = models.ForeignKey(User, related_name="projects", on_delete=models.CASCADE)
     title = models.CharField(max_length=100, unique=True)
     description = models.TextField(max_length=350, unique=True)
+    pub_date = models.DateTimeField(default=timezone.now)
 
 
 class Feature(models.Model):

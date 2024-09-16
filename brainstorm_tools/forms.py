@@ -6,24 +6,28 @@ from .models import Project, Feature, SubFeature
 
 class ProjectForm(forms.ModelForm):
     title = forms.CharField(
-        widget=Textarea(attrs={
-            "class": "form-control",
-            "placeholder": "Enter title",
-            "maxlength": "100",
-            "id": "InputTitle",
-            "style": "height: 10px",
-            "oninput": "updateCharCount('InputTitle', 'TitleCharCount', 100); resizeTextarea(this);"
-        })
+        widget=Textarea(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Enter title",
+                "maxlength": "100",
+                "id": "InputTitle",
+                "style": "height: 10px",
+                "oninput": "updateCharCount('InputTitle', 'TitleCharCount', 100); resizeTextarea(this);",
+            }
+        )
     )
     description = forms.CharField(
-        widget=Textarea(attrs={
-            "class": "form-control",
-            "placeholder": "Enter description",
-            "maxlength": "350",
-            "id": "InputDescription",
-            "style": "height: 10px",
-            "oninput": "updateCharCount('InputDescription', 'DescriptionCharCount', 350); resizeTextarea(this);"
-        })
+        widget=Textarea(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Enter description",
+                "maxlength": "350",
+                "id": "InputDescription",
+                "style": "height: 10px",
+                "oninput": "updateCharCount('InputDescription', 'DescriptionCharCount', 350); resizeTextarea(this);",
+            }
+        )
     )
 
     class Meta:

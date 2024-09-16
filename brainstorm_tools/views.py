@@ -58,7 +58,7 @@ def create_project(request):
 @login_required
 def view_projects(request, username):
     user = get_object_or_404(User, username=username)
-    projects = Project.objects.filter(user=user)
+    projects = Project.objects.filter(user=user).order_by('-pub_date')
     projects_list = []
     features_list = []
     subfeatures_list = []
@@ -78,6 +78,7 @@ def view_projects(request, username):
         "projects": projects_list,
         "features": features_list,
         "subfeatures": subfeatures_list,
+        "username": username,
     }
     return render(
         request, "brainstorm_tools/projects.html", context=project_view_context
