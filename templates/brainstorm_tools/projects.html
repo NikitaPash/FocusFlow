@@ -9,39 +9,89 @@
 <body>
 {% block content %}
 
-    <div class="container-fluid mt-4">
+    <div class="container-fluid mt-4 min-vh-100">
         <div class="row mx-2">
-        {% if not projects %}
-        <div class="d-flex justify-content-center align-items-center" style="min-height: 75vh;">
-            <div class="text-center">
-                <h5 class="text-muted">
-                    No projects available at the moment.
-                    {% if request.user.username == username %}
-                        Start creating one!
-                    </h5>
-                    <a href="{% url 'create_project' %}" class="btn btn-dark mt-2">Create a New Project</a>
-                    {% endif %}
-            </div>
-        </div>
-        {% else %}
-            {% for project in projects %}
-                <div class="col-12 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="card-title project-title">{{ project.title }}</h5>
-                                <small class="text-muted">
-                                    •{% timezone "Europe/Kiev" %}{{ project.pub_date|timesince }} ago{% endtimezone %}
-                                </small>
-                            </div>
-                            <p class="card-text project-description">
-                                {{ project.description }}
-                            </p>
-                        </div>
+            <form method="POST" autocomplete="off">
+                {% csrf_token %}
+                <div class="d-flex justify-content-center">
+                    <div class="input-group mb-4" style="max-width: 600px; width: 100%;">
+                        <input type="search" class="form-control" placeholder="Search" aria-label="Search"
+                               aria-describedby="search-addon" name="search_query"
+                               style="box-shadow: -0.1rem 0 0.2rem rgba(108, 117, 125, 0.25);"/>
+                        <button class="input-group-text border-0 bg-dark" type="submit" id="search-addon"
+                                style="cursor:pointer">
+                            <i class="fas fa-search" style="color: gray"></i>
+                        </button>
                     </div>
                 </div>
-            {% endfor %}
-        {% endif %}
+            </form>
+
+            {% if not projects_page %}
+                <div class="d-flex justify-content-center align-items-center min-vh-75">
+                    <div class="text-center">
+                        <h5 class="text-muted">
+                            No projects were found.
+                            {% if request.user.username == username %}
+                                Start creating one!
+                                </h5>
+                                <a href="{% url 'create_project' %}" class="btn btn-dark mt-2">Create a New Project</a>
+                            {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                {% for project in projects_page %}
+                    <div class="col-12 mb-4">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12 col-md-9">
+                                        <h5 class="card-title mb-1">
+                                            {{ project.title }}
+                                        </h5>
+                                    </div>
+                                    <div class="col-12 col-md-3 text-md-end mb-2">
+                                        <small class="text-muted">
+                                            • {% timezone "Europe/Kiev" %}{{ project.pub_date|timesince }}
+                                            ago{% endtimezone %}
+                                        </small>
+                                    </div>
+                                </div>
+                                <p class="card-text mb-0">
+                                    {{ project.description }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                {% if projects_page.has_other_pages %}
+                    <div class="btn-group mt-3" role="group" aria-label="Pagination">
+                        {% if projects_page.has_previous %}
+                            <a href="?page={{ projects_page.previous_page_number }}" class="btn btn-dark rounded-start">
+                                &laquo;
+                            </a>
+                        {% endif %}
+
+                        {% for page_number in projects_page.paginator.page_range %}
+                            {% if projects_page.number == page_number %}
+                                <button class="btn btn-dark active">
+                                    <span>{{ page_number }}</span>
+                                </button>
+                            {% else %}
+                                <a href="?page={{ page_number }}" class="btn btn-dark">
+                                    {{ page_number }}
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if projects_page.has_next %}
+                            <a href="?page={{ projects_page.next_page_number }}" class="btn btn-dark rounded-end">
+                                &raquo;
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
 

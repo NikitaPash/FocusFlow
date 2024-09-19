@@ -1,8 +1,8 @@
-from lib2to3.fixes.fix_input import context
-
 from allauth.core.internal.httpkit import redirect
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 
 from user_auth.models import User
 from .forms import ProjectForm
@@ -42,7 +42,7 @@ def create_project(request):
 
                 feature_counter += 1
 
-            return redirect("create_project")
+            return redirect(reverse("view_projects", args=[request.user.username]))
     else:
         project_form = ProjectForm()
 
@@ -58,26 +58,28 @@ def create_project(request):
 @login_required
 def view_projects(request, username):
     user = get_object_or_404(User, username=username)
-    projects = Project.objects.filter(user=user).order_by('-pub_date')
-    projects_list = []
-    features_list = []
-    subfeatures_list = []
+    if request.method == "POST":
+        search_query = request.POST.get('search_query', '').strip()
+        if search_query:
+            projects = Project.objects.filter(user=user, title__icontains=search_query).order_by('-pub_date')
+        else:
+            projects = Project.objects.filter(user=user).order_by('-pub_date')
+    else:
+        projects = Project.objects.filter(user=user).order_by('-pub_date')
 
-    for project in projects:
-        projects_list.append(project)
-        features = Feature.objects.filter(project=project)
-        if features.exists():
-            for feature in features:
-                features_list.append(feature)
-                subfeatures = SubFeature.objects.filter(feature=feature)
-                if subfeatures.exists():
-                    for subfeature in subfeatures:
-                        subfeatures_list.append(subfeature)
+    page = request.GET.get('page', 1)
+    items_per_page = 5
+    paginator = Paginator(projects, items_per_page)
+
+    try:
+        projects_page = paginator.page(page)
+    except PageNotAnInteger:
+        projects_page = paginator.page(1)
+    except EmptyPage:
+        projects_page = paginator.page(paginator.num_pages)
 
     project_view_context = {
-        "projects": projects_list,
-        "features": features_list,
-        "subfeatures": subfeatures_list,
+        "projects_page": projects_page,
         "username": username,
     }
     return render(
