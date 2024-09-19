@@ -24,8 +24,6 @@
 }
 
 
-/* base.css */
-
 .project-title {
     font-size: 1.5rem;
     font-weight: 700;
@@ -45,3 +43,25 @@
     margin-bottom: 15px;
     line-height: 1.5;
 }
+.pagination .page-link {
+    background-color: #343a40;
+    color: #fff;
+    border-color: #343a40;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.pagination .page-link:hover {
+    background-color: #495057;
+    color: #fff;
+}
+
+.pagination .page-link:focus {
+    box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.25);
+    outline: none;
+}
+
+

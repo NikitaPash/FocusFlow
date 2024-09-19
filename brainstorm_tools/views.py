@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.views.decorators.cache import cache_page
 
 from user_auth.models import User
 from .forms import ProjectForm
