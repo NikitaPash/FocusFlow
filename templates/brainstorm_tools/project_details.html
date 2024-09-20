@@ -1,0 +1,11 @@
+{% extends 'base/base.html' %}
+
+<head>
+    <title>{% block title %}Home - Focus Flow{% endblock %}</title>
+</head>
+<body>
+{% block content %}
+    <h1>{{ project.title }} page!</h1>
+    <p>{{ project.description }}</p>
+{% endblock %}
+</body>

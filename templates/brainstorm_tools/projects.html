@@ -46,7 +46,7 @@
                                 <div class="row">
                                     <div class="col-12 col-md-9">
                                         <h5 class="card-title mb-1">
-                                            {{ project.title }}
+                                            <a href="{% url "project_details" project.slug %}">{{ project.title }}</a>
                                         </h5>
                                     </div>
                                     <div class="col-12 col-md-3 text-md-end mb-2">
@@ -65,42 +65,45 @@
                 {% endfor %}
 
                 <div class="pagination-container mb-3 d-flex justify-content-center">
-    <nav aria-label="Page navigation">
-        <ul class="pagination mb-0">
-            {% if projects_page.has_previous %}
-            <li class="page-item">
-                <a href="?page={{ projects_page.previous_page_number }}" class="page-link bg-dark text-light" aria-label="Previous">
-                    &laquo;
-                </a>
-            </li>
-            {% endif %}
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination mb-0">
+                            {% if projects_page.has_previous %}
+                                <li class="page-item">
+                                    <a href="?page={{ projects_page.previous_page_number }}"
+                                       class="page-link bg-dark text-light" aria-label="Previous">
+                                        &laquo;
+                                    </a>
+                                </li>
+                            {% endif %}
 
-            {% for page_number in projects_page.paginator.page_range %}
-                {% if projects_page.number == page_number %}
-                <li class="page-item active">
-                    <span class="page-link bg-dark text-light">{{ page_number }}</span>
-                </li>
-                {% elif page_number == 1 or page_number == projects_page.paginator.num_pages or page_number >= projects_page.number|add:-2 and page_number <= projects_page.number|add:2 %}
-                <li class="page-item">
-                    <a href="?page={{ page_number }}" class="page-link bg-dark text-light">{{ page_number }}</a>
-                </li>
-                {% elif page_number == projects_page.number|add:-3 or page_number == projects_page.number|add:3 %}
-                <li class="page-item">
-                    <span class="page-link bg-dark text-light">…</span>
-                </li>
-                {% endif %}
-            {% endfor %}
+                            {% for page_number in projects_page.paginator.page_range %}
+                                {% if projects_page.number == page_number %}
+                                    <li class="page-item active">
+                                        <span class="page-link bg-gray text-light">{{ page_number }}</span>
+                                    </li>
+                                {% elif page_number == 1 or page_number == projects_page.paginator.num_pages or page_number >= projects_page.number|add:-2 and page_number <= projects_page.number|add:2 %}
+                                    <li class="page-item">
+                                        <a href="?page={{ page_number }}"
+                                           class="page-link bg-dark text-light">{{ page_number }}</a>
+                                    </li>
+                                {% elif page_number == projects_page.number|add:-3 or page_number == projects_page.number|add:3 %}
+                                    <li class="page-item">
+                                        <span class="page-link bg-dark text-light">…</span>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
 
-            {% if projects_page.has_next %}
-            <li class="page-item">
-                <a href="?page={{ projects_page.next_page_number }}" class="page-link bg-dark text-light" aria-label="Next">
-                    &raquo;
-                </a>
-            </li>
-            {% endif %}
-        </ul>
-    </nav>
-</div>
+                            {% if projects_page.has_next %}
+                                <li class="page-item">
+                                    <a href="?page={{ projects_page.next_page_number }}"
+                                       class="page-link bg-dark text-light" aria-label="Next">
+                                        &raquo;
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
 
 
             {% endif %}

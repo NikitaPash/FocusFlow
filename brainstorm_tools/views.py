@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-from django.views.decorators.cache import cache_page
 
 from user_auth.models import User
 from .forms import ProjectForm
@@ -60,15 +59,17 @@ def create_project(request):
 def view_projects(request, username):
     user = get_object_or_404(User, username=username)
     if request.method == "POST":
-        search_query = request.POST.get('search_query', '').strip()
+        search_query = request.POST.get("search_query", "").strip()
         if search_query:
-            projects = Project.objects.filter(user=user, title__icontains=search_query).order_by('-pub_date')
+            projects = Project.objects.filter(
+                user=user, title__icontains=search_query
+            ).order_by("-pub_date")
         else:
-            projects = Project.objects.filter(user=user).order_by('-pub_date')
+            projects = Project.objects.filter(user=user).order_by("-pub_date")
     else:
-        projects = Project.objects.filter(user=user).order_by('-pub_date')
+        projects = Project.objects.filter(user=user).order_by("-pub_date")
 
-    page = request.GET.get('page', 1)
+    page = request.GET.get("page", 1)
     items_per_page = 5
     paginator = Paginator(projects, items_per_page)
 
@@ -86,3 +87,20 @@ def view_projects(request, username):
     return render(
         request, "brainstorm_tools/projects.html", context=project_view_context
     )
+
+
+@login_required
+def project_details(request, project_slug):
+    project = get_object_or_404(Project, slug=project_slug)
+    features = Feature.objects.filter(project=project)
+    features_list = []
+    subfeatures_list = []
+    if features.exists():
+        for feature in features:
+            features_list.append(feature)
+            subfeatures = SubFeature.objects.filter(feature=feature)
+            if subfeatures.exists():
+                for subfeature in subfeatures:
+                    subfeatures_list.append(subfeature)
+    context = {"project": project, "features": features_list, "subfeatures": subfeatures_list}
+    return render(request, "brainstorm_tools/project_details.html", context)
