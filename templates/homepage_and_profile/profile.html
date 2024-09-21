@@ -82,7 +82,8 @@
                                     <label for="InputUsername">Username:</label>
                                     <input value="{{ username_form.username.value|default_if_none:'' }}"
                                            class="form-control" name="username" id="InputUsername"
-                                           placeholder="Enter Username" style="width: 100%;">
+                                           placeholder="Enter Username" style="width: 100%;" maxlength="20" oninput="updateCharCount('InputUsername', 'UsernameCharCount', 20)">
+                                    <small id="UsernameCharCount" class="form-text text-muted">0/20 characters</small>
                                     {% if username_form.errors.username %}
                                         <ul class="field-errors mb-0">
                                             {% for err in username_form.errors.username %}

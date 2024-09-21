@@ -10,10 +10,10 @@ class ProjectForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 "placeholder": "Enter title",
-                "maxlength": "100",
+                "maxlength": "30",
                 "id": "InputTitle",
                 "style": "height: 10px",
-                "oninput": "updateCharCount('InputTitle', 'TitleCharCount', 100); resizeTextarea(this);",
+                "oninput": "updateCharCount('InputTitle', 'TitleCharCount', 30); resizeTextarea(this);",
             }
         )
     )

@@ -1,20 +1,21 @@
 from django.db import models
-from django.template.defaultfilters import slugify
 from django.utils import timezone
+from django.utils.text import slugify
+from trans import trans
 
 from user_auth.models import User
 
 
 class Project(models.Model):
     user = models.ForeignKey(User, related_name="projects", on_delete=models.CASCADE)
-    title = models.CharField(max_length=100, unique=True)
-    description = models.TextField(max_length=350, unique=True)
+    title = models.CharField(max_length=30, unique=True)
+    description = models.TextField(max_length=350)
     pub_date = models.DateTimeField(default=timezone.now)
     slug = models.SlugField(null=False, blank=False, unique=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(f'{self.user.username}_{self.title}')
+            self.slug = slugify(trans(self.title), allow_unicode=True)
         super().save(*args, **kwargs)
 
 

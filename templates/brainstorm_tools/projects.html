@@ -9,7 +9,7 @@
 <body>
 {% block content %}
 
-    <div class="container-fluid mt-4 min-vh-100">
+    <div class="container-fluid mt-4 min-vh-75">
         <div class="row mx-2">
             <form method="POST" autocomplete="off">
                 {% csrf_token %}
@@ -46,7 +46,8 @@
                                 <div class="row">
                                     <div class="col-12 col-md-9">
                                         <h5 class="card-title mb-1">
-                                            <a href="{% url "project_details" project.slug %}">{{ project.title }}</a>
+                                            <a href="{% url 'project_details' project.user.username project.slug %}"
+                                               class="project-link">{{ project.title }}</a>
                                         </h5>
                                     </div>
                                     <div class="col-12 col-md-3 text-md-end mb-2">

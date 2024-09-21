@@ -90,7 +90,7 @@ def view_projects(request, username):
 
 
 @login_required
-def project_details(request, project_slug):
+def project_details(request, username, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     features = Feature.objects.filter(project=project)
     features_list = []
