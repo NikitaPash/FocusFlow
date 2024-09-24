@@ -100,26 +100,21 @@ input[type="search"]::-webkit-search-cancel-button {
     color: #333;
 }
 
-#featureListSection {
+#featureListSectionCard {
     max-height: 400px;
     overflow-y: auto;
     padding: 20px;
-    background-color: #ffffff;
+    background-color: #f8f9fa;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-#featureListSection h3 {
-    margin-bottom: 20px;
-    color: black;
-}
 
-
-#featureListSection::-webkit-scrollbar {
+#featureListSectionCard::-webkit-scrollbar {
     width: 8px;
 }
 
-#featureListSection::-webkit-scrollbar-thumb {
+#featureListSectionCard::-webkit-scrollbar-thumb {
     background-color: gray;
     border-radius: 4px;
 }
@@ -146,3 +141,39 @@ input[type="search"]::-webkit-search-cancel-button {
 .accordion-button.collapsed {
     background-color: white;
 }
+
+.custom-overview-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.custom-overview-card #editDescriptionForm {
+    display: none;
+    width: 100%;
+    min-width: 300px;
+    resize: none;
+}
+
+.custom-overview-card #descriptionText {
+    flex-grow: 1;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    display: block;
+    align-items: flex-start;
+}
+
+.custom-overview-card #descriptionText.p-hidden {
+    display: none;
+}
+
+.custom-overview-card textarea {
+    width: 100%;
+    min-height: 100px;
+    resize: none;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    height: auto;
+}
+

@@ -8,8 +8,9 @@ from user_auth.models import User
 
 class Project(models.Model):
     user = models.ForeignKey(User, related_name="projects", on_delete=models.CASCADE)
-    title = models.CharField(max_length=30, unique=True)
-    description = models.TextField(max_length=350)
+    title = models.CharField(max_length=50, unique=True)
+    description = models.TextField(max_length=150)
+    detailed_description = models.TextField(max_length=2000)
     pub_date = models.DateTimeField(default=timezone.now)
     slug = models.SlugField(null=False, blank=False, unique=True)
 

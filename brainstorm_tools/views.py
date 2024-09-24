@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
 from user_auth.models import User
-from .forms import ProjectForm
+from .forms import ProjectForm, ChangeProjectDetailsForm
 from .models import Feature, SubFeature, Project
 
 
@@ -95,6 +95,15 @@ def project_details(request, username, project_slug):
     features = Feature.objects.filter(project=project)
     features_list = []
     subfeatures_list = []
+    details_form = ChangeProjectDetailsForm(instance=project)
+
+    context = {
+        "project": project,
+        "features": features_list,
+        "subfeatures": subfeatures_list,
+        "details_form": details_form,
+    }
+
     if features.exists():
         for feature in features:
             features_list.append(feature)
@@ -102,5 +111,12 @@ def project_details(request, username, project_slug):
             if subfeatures.exists():
                 for subfeature in subfeatures:
                     subfeatures_list.append(subfeature)
-    context = {"project": project, "features": features_list, "subfeatures": subfeatures_list}
+
+    if request.method == "POST":
+        details_form = ChangeProjectDetailsForm(request.POST, instance=project)
+        if details_form.is_valid():
+            details_form.save()
+            return render(request, "brainstorm_tools/project_details.html", context)
+
     return render(request, "brainstorm_tools/project_details.html", context)
+

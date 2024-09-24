@@ -20,7 +20,7 @@
                 <div class="row row-cols-2 row-cols-md-3 g-2 justify-content-center">
                     <div class="col">
                         <button class="btn btn-outline-dark w-100 section-btn" id="overviewBtn"
-                                onclick="showSection('overviewSection')">Overview
+                                onclick="showSection('overviewSectionCard')">Overview
                         </button>
                     </div>
                     <div class="col">
@@ -46,50 +46,81 @@
                 </div>
             </div>
         </div>
+        
+        <div id="overviewSectionCard" class="project-info-section card shadow mb-5 rounded p-4 custom-overview-card">
+            <div class="d-flex align-items-center justify-content-between">
+                <h5 class="mb-0">
+                    <i class="fa-solid fa-book me-2" style="color: black;"></i>Details:
+                </h5>
+                <a href="#" class="text-decoration-none link-dark" title="Edit Description" id="toggleEditBtn">
+                    <i class="fas fa-pencil-alt"></i>
+                </a>
+            </div>
+            <hr>
 
+            <div class="d-flex">
+                <form id="editDescriptionForm" class="me-3 flex-grow-1" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="descriptionInput">Edit Description:</label>
+                        <textarea id="descriptionInput" name="detailed_description" class="form-control" style="min-height: 150px;" maxlength="2000">{{ project.detailed_description|default_if_none:'' }}</textarea>
+                        <small id="charCounter" class="text-muted">0/2000 characters</small>
+                        <button type="submit" id="saveDescriptionBtn" class="btn btn-outline-dark w-100 section-btn mt-2">Save</button>
+                    </div>
+                </form>
 
-        <div id="overviewSection" class="project-info-section">
-            <h3 class="text-center">Overview</h3>
-            <div id="overviewSectionCard" class="card shadow mb-5 rounded">
-                <h3 class="text-center">{{ project.title }}</h3>
-                <p>{{ project.description }}</p>
+                <div id="descriptionText" class="flex-grow-1">
+                    {% if project.detailed_description %}
+                        <p class="description-text" style="color: #555; font-size: 16px;">
+                            {{ project.detailed_description }}
+                        </p>
+                    {% else %}
+                        <p class="no-description-text" style="color: #999; font-style: italic;">
+                            No details yet :(
+                        </p>
+                    {% endif %}
+                </div>
             </div>
         </div>
 
-        <div id="featureListSection" class="project-info-section pt-0" style="display: none;">
+
+
+        <div id="featureListSection" class="project-info-section" style="display: none;">
             <h3 class="text-center">Features</h3>
-            <div class="accordion" id="featuresAccordion">
-                {% for feature in features %}
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading{{ feature.id }}">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapse{{ feature.id }}" aria-expanded="false"
-                                    aria-controls="collapse{{ feature.id }}">
-                                {{ feature.feature_name }}
-                            </button>
-                        </h2>
-                        <div id="collapse{{ feature.id }}" class="accordion-collapse collapse"
-                             aria-labelledby="heading{{ feature.id }}" data-bs-parent="#featuresAccordion">
-                            <div class="accordion-body">
-                                {% if subfeatures %}
-                                    <ul class="list-group list-group-flush">
-                                        {% for subfeature in subfeatures %}
-                                            {% if subfeature.feature.id == feature.id %}
-                                                <li class="list-group-item">
-                                                    <h6>{{ subfeature.subfeature_name }}</h6>
-                                                </li>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </ul>
-                                {% else %}
-                                    <p class="text-muted">No subfeatures available for this feature.</p>
-                                {% endif %}
+            <div id="featureListSectionCard" class="card pt-0">
+                <div class="accordion" id="featuresAccordion">
+                    {% for feature in features %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading{{ feature.id }}">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapse{{ feature.id }}" aria-expanded="false"
+                                        aria-controls="collapse{{ feature.id }}">
+                                    {{ feature.feature_name }}
+                                </button>
+                            </h2>
+                            <div id="collapse{{ feature.id }}" class="accordion-collapse collapse"
+                                 aria-labelledby="heading{{ feature.id }}" data-bs-parent="#featuresAccordion">
+                                <div class="accordion-body">
+                                    {% if subfeatures %}
+                                        <ul class="list-group list-group-flush">
+                                            {% for subfeature in subfeatures %}
+                                                {% if subfeature.feature.id == feature.id %}
+                                                    <li class="list-group-item">
+                                                        <h6>{{ subfeature.subfeature_name }}</h6>
+                                                    </li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        <p class="text-muted">No subfeatures available for this feature.</p>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                {% empty %}
-                    <p class="text-muted text-center">No features available for this project.</p>
-                {% endfor %}
+                    {% empty %}
+                        <p class="text-muted text-center">No features available for this project.</p>
+                    {% endfor %}
+                </div>
             </div>
         </div>
 
@@ -116,5 +147,6 @@
         </div>
     </div>
     <script src="{% static 'js/project_sections.js' %}"></script>
+    <script src="{% static 'js/project_page_overview.js' %}"></script>
 {% endblock %}
 </body>

@@ -1,5 +1,7 @@
 from django import forms
 from django.forms import TextInput, Textarea
+from django.views.decorators.http import require_GET
+from urllib3 import request
 
 from .models import Project, Feature, SubFeature
 
@@ -10,10 +12,10 @@ class ProjectForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 "placeholder": "Enter title",
-                "maxlength": "30",
+                "maxlength": "50",
                 "id": "InputTitle",
                 "style": "height: 10px",
-                "oninput": "updateCharCount('InputTitle', 'TitleCharCount', 30); resizeTextarea(this);",
+                "oninput": "updateCharCount('InputTitle', 'TitleCharCount', 50); resizeTextarea(this);",
             }
         )
     )
@@ -22,10 +24,10 @@ class ProjectForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 "placeholder": "Enter description",
-                "maxlength": "350",
+                "maxlength": "150",
                 "id": "InputDescription",
                 "style": "height: 10px",
-                "oninput": "updateCharCount('InputDescription', 'DescriptionCharCount', 350); resizeTextarea(this);",
+                "oninput": "updateCharCount('InputDescription', 'DescriptionCharCount', 150); resizeTextarea(this);",
             }
         )
     )
@@ -138,3 +140,19 @@ class FeatureForm(forms.ModelForm):
                         feature=feature, subfeature_name=subfeature_name
                     )
         return feature
+
+
+class ChangeProjectDetailsForm(forms.ModelForm):
+    detailed_description = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'style': 'min-height: 300px;',
+            'placeholder': 'Enter project details...',
+        })
+    )
+
+    class Meta:
+        model = Project
+        fields = ("detailed_description",)
+
