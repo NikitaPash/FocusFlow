@@ -3,7 +3,7 @@ from django.forms import TextInput, Textarea
 from django.views.decorators.http import require_GET
 from urllib3 import request
 
-from .models import Project, Feature, SubFeature
+from .models import Project, Feature, SubFeature, ProjectRating
 
 
 class ProjectForm(forms.ModelForm):
@@ -145,14 +145,21 @@ class FeatureForm(forms.ModelForm):
 class ChangeProjectDetailsForm(forms.ModelForm):
     detailed_description = forms.CharField(
         required=False,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'style': 'min-height: 300px;',
-            'placeholder': 'Enter project details...',
-        })
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "style": "min-height: 300px;",
+                "placeholder": "Enter project details...",
+            }
+        ),
     )
 
     class Meta:
         model = Project
         fields = ("detailed_description",)
 
+
+class RatingForm(forms.ModelForm):
+    class Meta:
+        model = ProjectRating
+        fields = ["rating"]

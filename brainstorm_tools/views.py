@@ -1,12 +1,13 @@
 from allauth.core.internal.httpkit import redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Avg
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
 from user_auth.models import User
-from .forms import ProjectForm, ChangeProjectDetailsForm
-from .models import Feature, SubFeature, Project
+from .forms import ProjectForm, ChangeProjectDetailsForm, RatingForm
+from .models import Feature, SubFeature, Project, ProjectRating
 
 
 @login_required
@@ -89,6 +90,9 @@ def view_projects(request, username):
     )
 
 
+from django.http import JsonResponse
+from django.db.models import Avg
+
 @login_required
 def project_details(request, username, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
@@ -97,11 +101,20 @@ def project_details(request, username, project_slug):
     subfeatures_list = []
     details_form = ChangeProjectDetailsForm(instance=project)
 
+    user_rating = ProjectRating.objects.filter(
+        project=project, user=request.user,
+    ).first()
+
+    rating_form = RatingForm()
+
     context = {
         "project": project,
         "features": features_list,
         "subfeatures": subfeatures_list,
         "details_form": details_form,
+        "rating_form": rating_form,
+        "user_rating": user_rating,
+        "total_rating": project.total_rating,
     }
 
     if features.exists():
@@ -113,10 +126,33 @@ def project_details(request, username, project_slug):
                     subfeatures_list.append(subfeature)
 
     if request.method == "POST":
-        details_form = ChangeProjectDetailsForm(request.POST, instance=project)
-        if details_form.is_valid():
-            details_form.save()
-            return render(request, "brainstorm_tools/project_details.html", context)
+        if "detailed_description" in request.POST:
+            details_form = ChangeProjectDetailsForm(request.POST, instance=project)
+            if details_form.is_valid():
+                details_form.save()
+
+        if "rating" in request.POST and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            rating_form = RatingForm(request.POST)
+            if rating_form.is_valid():
+                new_rating = float(rating_form.cleaned_data["rating"])
+                if user_rating:
+                    user_rating.rating = new_rating
+                    user_rating.save()
+                else:
+                    ProjectRating.objects.create(
+                        user=request.user, project=project, rating=new_rating
+                    )
+
+                total_ratings = ProjectRating.objects.filter(project=project)
+                project.rating_count = total_ratings.count()
+                project.total_rating = total_ratings.aggregate(Avg('rating'))['rating__avg']
+                project.save()
+
+                return JsonResponse({
+                    "user_rating": new_rating,
+                    "total_rating": project.total_rating,
+                    "rating_count": project.rating_count,
+                })
 
     return render(request, "brainstorm_tools/project_details.html", context)
 

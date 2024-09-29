@@ -177,3 +177,30 @@ input[type="search"]::-webkit-search-cancel-button {
     height: auto;
 }
 
+.rating {
+    display: flex;
+    justify-content: center;
+    direction: rtl;
+}
+
+.rating input {
+    display: none;
+}
+
+.rating label {
+    font-size: 2rem;
+    color: #ddd;
+    cursor: pointer;
+}
+
+.rating input:checked ~ label,
+.rating input:hover ~ label {
+    color: #f39c12;
+}
+
+.rating input:hover ~ label,
+.rating input:checked ~ label {
+    color: #f39c12;
+}
+
+

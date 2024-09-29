@@ -11,6 +11,8 @@ class Project(models.Model):
     title = models.CharField(max_length=50, unique=True)
     description = models.TextField(max_length=150)
     detailed_description = models.TextField(max_length=2000)
+    rating_count = models.IntegerField(default=0)
+    total_rating = models.FloatField(default=0)
     pub_date = models.DateTimeField(default=timezone.now)
     slug = models.SlugField(null=False, blank=False, unique=True)
 
@@ -18,6 +20,17 @@ class Project(models.Model):
         if not self.slug:
             self.slug = slugify(trans(self.title), allow_unicode=True)
         super().save(*args, **kwargs)
+
+
+class ProjectRating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    rating = models.FloatField(default=0.0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ("user", "project")
 
 
 class Feature(models.Model):
