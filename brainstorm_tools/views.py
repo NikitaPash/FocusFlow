@@ -4,6 +4,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Avg
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.http import JsonResponse
 
 from user_auth.models import User
 from .forms import ProjectForm, ChangeProjectDetailsForm, RatingForm
@@ -89,9 +90,6 @@ def view_projects(request, username):
         request, "brainstorm_tools/projects.html", context=project_view_context
     )
 
-
-from django.http import JsonResponse
-from django.db.models import Avg
 
 @login_required
 def project_details(request, username, project_slug):
