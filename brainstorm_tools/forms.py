@@ -1,9 +1,7 @@
 from django import forms
 from django.forms import TextInput, Textarea
-from django.views.decorators.http import require_GET
-from urllib3 import request
 
-from .models import Project, Feature, SubFeature, ProjectRating
+from .models import Project, Feature, ProjectRating
 
 
 class ProjectForm(forms.ModelForm):
@@ -88,58 +86,7 @@ class ProjectForm(forms.ModelForm):
 class FeatureForm(forms.ModelForm):
     class Meta:
         model = Feature
-        fields = ("feature_name",)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        if self.instance and self.instance.pk:
-            subfeatures = SubFeature.objects.filter(feature=self.instance)
-            for i, subfeature in enumerate(subfeatures):
-                field_name = f"subfeature_name_{i}"
-                self.fields[field_name] = forms.CharField(
-                    initial=subfeature.subfeature_name,
-                    widget=TextInput(
-                        attrs={
-                            "class": "form-control",
-                            "placeholder": "Enter Subfeature",
-                        }
-                    ),
-                )
-            field_name = f"subfeature_name_{len(subfeatures)}"
-            self.fields[field_name] = forms.CharField(
-                required=False,
-                widget=TextInput(
-                    attrs={"class": "form-control", "placeholder": "Enter Subfeature"}
-                ),
-            )
-
-    def clean(self):
-        cleaned_data = super().clean()
-        subfeature_fields = [
-            field for field in self.data if field.startswith("subfeature_name_")
-        ]
-        subfeatures = set()
-
-        for field_name in subfeature_fields:
-            subfeature_name = self.data.get(field_name)
-            if subfeature_name and subfeature_name not in subfeatures:
-                subfeatures.add(subfeature_name)
-
-        cleaned_data["subfeatures"] = subfeatures
-        return cleaned_data
-
-    def save(self, commit=True):
-        feature = super().save(commit=False)
-
-        if commit:
-            feature.save()
-            for subfeature_name in self.cleaned_data["subfeatures"]:
-                if subfeature_name:
-                    SubFeature.objects.create(
-                        feature=feature, subfeature_name=subfeature_name
-                    )
-        return feature
+        fields = ("feature_name", "feature_description")
 
 
 class ChangeProjectDetailsForm(forms.ModelForm):

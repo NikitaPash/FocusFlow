@@ -8,7 +8,7 @@ from django.http import JsonResponse
 
 from user_auth.models import User
 from .forms import ProjectForm, ChangeProjectDetailsForm, RatingForm
-from .models import Feature, SubFeature, Project, ProjectRating
+from .models import Feature, Project, ProjectRating
 
 
 @login_required
@@ -20,29 +20,6 @@ def create_project(request):
             project = project_form.save(commit=False)
             project.user = request.user
             project.save()
-
-            features = project_form.cleaned_data.get("features", [])
-            feature_counter = 0
-
-            for feature_name in features:
-                feature = Feature.objects.create(
-                    project=project, feature_name=feature_name
-                )
-
-                subfeatures_key = f"subfeature_name_{feature_counter}_"
-                subfeatures = [
-                    value
-                    for key, value in request.POST.items()
-                    if key.startswith(subfeatures_key)
-                ]
-
-                for subfeature_name in subfeatures:
-                    if subfeature_name.strip():
-                        SubFeature.objects.create(
-                            feature=feature, subfeature_name=subfeature_name
-                        )
-
-                feature_counter += 1
 
             return redirect(reverse("view_projects", args=[request.user.username]))
     else:
@@ -96,7 +73,6 @@ def project_details(request, username, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     features = Feature.objects.filter(project=project)
     features_list = []
-    subfeatures_list = []
     details_form = ChangeProjectDetailsForm(instance=project)
 
     user_rating = ProjectRating.objects.filter(
@@ -108,7 +84,6 @@ def project_details(request, username, project_slug):
     context = {
         "project": project,
         "features": features_list,
-        "subfeatures": subfeatures_list,
         "details_form": details_form,
         "rating_form": rating_form,
         "user_rating": user_rating,
@@ -118,10 +93,6 @@ def project_details(request, username, project_slug):
     if features.exists():
         for feature in features:
             features_list.append(feature)
-            subfeatures = SubFeature.objects.filter(feature=feature)
-            if subfeatures.exists():
-                for subfeature in subfeatures:
-                    subfeatures_list.append(subfeature)
 
     if request.method == "POST":
         if "detailed_description" in request.POST:
@@ -153,4 +124,3 @@ def project_details(request, username, project_slug):
                 })
 
     return render(request, "brainstorm_tools/project_details.html", context)
-

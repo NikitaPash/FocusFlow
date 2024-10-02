@@ -89,8 +89,16 @@
 
 
         <div id="featureListSection" class="project-info-section" style="display: none;">
-            <h3 class="text-center">Features</h3>
-            <div id="featureListSectionCard" class="card pt-0">
+            <div id="featureListSectionCard" class="card p-4 shadow mb-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">
+                        <i class="fa-solid fa-gears me-2" style="color: black;"></i>Features:
+                    </h5>
+                    <a href="#" class="text-decoration-none link-dark" id="toggleFormBtn">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                </div>
+                <hr>
                 <div class="accordion" id="featuresAccordion">
                     {% for feature in features %}
                         <div class="accordion-item">
@@ -103,25 +111,12 @@
                             </h2>
                             <div id="collapse{{ feature.id }}" class="accordion-collapse collapse"
                                  aria-labelledby="heading{{ feature.id }}" data-bs-parent="#featuresAccordion">
-                                <div class="accordion-body">
-                                    {% if subfeatures %}
-                                        <ul class="list-group list-group-flush">
-                                            {% for subfeature in subfeatures %}
-                                                {% if subfeature.feature.id == feature.id %}
-                                                    <li class="list-group-item">
-                                                        <h6>{{ subfeature.subfeature_name }}</h6>
-                                                    </li>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </ul>
-                                    {% else %}
-                                        <p class="text-muted">No subfeatures available for this feature.</p>
-                                    {% endif %}
-                                </div>
                             </div>
                         </div>
                     {% empty %}
-                        <p class="text-muted text-center">No features available for this project.</p>
+                        <p class="no-description-text" style="color: #999; font-style: italic;">
+                            No features available for this project yet :(
+                        </p>
                     {% endfor %}
                 </div>
             </div>
