@@ -111,7 +111,8 @@ class FeatureForm(forms.ModelForm):
         fields = ("feature_name", "feature_description")
 
 
-FeatureFormset = inlineformset_factory(Project, Feature, fields=('feature_name', 'feature_description'), extra=0, can_delete=True)
+FeatureFormset = inlineformset_factory(Project, Feature, fields=('feature_name', 'feature_description'), extra=0,
+                                       can_delete=True)
 
 
 class ChangeProjectDetailsForm(forms.ModelForm):

@@ -233,33 +233,28 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const addMoreBtn = document.getElementById('addFormBtn');
-            const totalForms = document.getElementById('id_features-TOTAL_FORMS'); // Correct ID for TOTAL_FORMS
+            const totalForms = document.getElementById('id_features-TOTAL_FORMS');
             const formList = document.querySelector('.form-list');
 
             addMoreBtn.addEventListener('click', function (event) {
                 event.preventDefault();
 
-                const currentFormCount = parseInt(totalForms.value); // Get the current number of forms
-                const lastForm = formList.querySelector('.feature-form:last-child'); // Get the last form element
+                const currentFormCount = parseInt(totalForms.value); 
+                const lastForm = formList.querySelector('.feature-form:last-child');
 
-                // Clone the last form
                 const newForm = lastForm.cloneNode(true);
 
-                // Replace the form IDs and names with the new form number
                 newForm.innerHTML = newForm.innerHTML.replace(/-\d+-/g, `-${currentFormCount}-`);
 
-                // Clear the values in the newly cloned form (you don't want to copy the data from the last form)
                 const inputs = newForm.querySelectorAll('input, textarea');
                 inputs.forEach(input => {
                     if (input.type !== 'hidden') {
-                        input.value = '';  // Reset the value of non-hidden fields
+                        input.value = ''; 
                     }
                 });
 
-                // Append the new form to the form list
                 formList.appendChild(newForm);
 
-                // Update the TOTAL_FORMS field to reflect the new count
                 totalForms.value = currentFormCount + 1;
             });
         });

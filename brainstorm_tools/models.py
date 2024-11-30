@@ -49,5 +49,3 @@ class Feature(models.Model):
     )
     feature_name = models.CharField(max_length=100)
     feature_description = models.CharField(max_length=300, default='Text')
-
-

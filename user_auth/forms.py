@@ -67,7 +67,6 @@ class CreateUserForm(UserCreationForm):
 
 
 class LoginForm(AuthenticationForm):
-
     username = forms.CharField(required=False)
 
     email = forms.EmailField(

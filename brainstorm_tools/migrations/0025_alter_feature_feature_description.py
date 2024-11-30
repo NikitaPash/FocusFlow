@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("brainstorm_tools", "0024_feature_feature_description_delete_subfeature"),
     ]
