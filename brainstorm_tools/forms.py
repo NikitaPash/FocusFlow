@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import TextInput, Textarea
+from django.forms import TextInput, Textarea, inlineformset_factory
 
 from .models import Project, Feature, ProjectRating
 
@@ -84,9 +84,34 @@ class ProjectForm(forms.ModelForm):
 
 
 class FeatureForm(forms.ModelForm):
+    feature_name = forms.CharField(
+        widget=Textarea(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Enter feature name",
+                "maxlength": "100",
+                "style": "height: 10px",
+            }
+        )
+    )
+
+    feature_description = forms.CharField(
+        widget=Textarea(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Enter feature description",
+                "maxlength": "300",
+                "style": "height: 10px",
+            }
+        )
+    )
+
     class Meta:
         model = Feature
         fields = ("feature_name", "feature_description")
+
+
+FeatureFormset = inlineformset_factory(Project, Feature, fields=('feature_name', 'feature_description'), extra=0, can_delete=True)
 
 
 class ChangeProjectDetailsForm(forms.ModelForm):

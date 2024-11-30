@@ -203,4 +203,6 @@ input[type="search"]::-webkit-search-cancel-button {
     color: #f39c12;
 }
 
-
+.accordion-body {
+    background-color: #a4a4a4;
+}

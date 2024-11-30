@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.http import JsonResponse
 
 from user_auth.models import User
-from .forms import ProjectForm, ChangeProjectDetailsForm, RatingForm
+from .forms import ProjectForm, ChangeProjectDetailsForm, RatingForm, FeatureFormset
 from .models import Feature, Project, ProjectRating
 
 
@@ -72,8 +72,19 @@ def view_projects(request, username):
 def project_details(request, username, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     features = Feature.objects.filter(project=project)
-    features_list = []
     details_form = ChangeProjectDetailsForm(instance=project)
+
+    feature_formset = FeatureFormset(instance=project)
+
+    for i, form in enumerate(feature_formset):
+        form.fields['feature_name'].widget.attrs.update({
+            'id': f'FeatureNameInput-{i}',
+            'oninput': f"updateCharCount('FeatureNameInput-{i}', 'FeatureNameCharCounter-{i}', 100); resizeTextarea(this);",
+        })
+        form.fields['feature_description'].widget.attrs.update({
+            'id': f'FeatureDescriptionInput-{i}',
+            'oninput': f"updateCharCount('FeatureDescriptionInput-{i}', 'FeatureDescriptionCharCounter-{i}', 300); resizeTextarea(this);",
+        })
 
     user_rating = ProjectRating.objects.filter(
         project=project, user=request.user,
@@ -83,22 +94,34 @@ def project_details(request, username, project_slug):
 
     context = {
         "project": project,
-        "features": features_list,
+        "features": features,
         "details_form": details_form,
         "rating_form": rating_form,
         "user_rating": user_rating,
         "total_rating": project.total_rating,
+        "feature_formset": feature_formset,
     }
-
-    if features.exists():
-        for feature in features:
-            features_list.append(feature)
 
     if request.method == "POST":
         if "detailed_description" in request.POST:
             details_form = ChangeProjectDetailsForm(request.POST, instance=project)
             if details_form.is_valid():
                 details_form.save()
+        if 'add_features' in request.POST:
+            feature_formset = FeatureFormset(request.POST, instance=project)
+
+            if feature_formset.is_valid():
+                for form in feature_formset.deleted_forms:
+                    if form.instance.pk:
+                        form.instance.delete()
+
+                instances = feature_formset.save(commit=False)
+
+                for instance in instances:
+                    instance.project = project
+                    instance.save()
+
+                return redirect(reverse('project_details', args=[username, project_slug]))
 
         if "rating" in request.POST and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             rating_form = RatingForm(request.POST)

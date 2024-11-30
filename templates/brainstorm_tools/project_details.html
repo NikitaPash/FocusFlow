@@ -92,13 +92,14 @@
             <div id="featureListSectionCard" class="card p-4 shadow mb-4">
                 <div class="d-flex align-items-center justify-content-between">
                     <h5 class="mb-0">
-                        <i class="fa-solid fa-gears me-2" style="color: black;"></i>Features:
+                        <i class="fa-solid fa-gears me-2" style="color: black;"></i> Features:
                     </h5>
-                    <a href="#" class="text-decoration-none link-dark" id="toggleFormBtn">
+                    <a href="#" class="text-decoration-none link-dark" title="Toggle Editor" id="toggleFeatureFormBtn">
                         <i class="fas fa-pencil-alt"></i>
                     </a>
                 </div>
                 <hr>
+
                 <div class="accordion" id="featuresAccordion">
                     {% for feature in features %}
                         <div class="accordion-item">
@@ -111,6 +112,9 @@
                             </h2>
                             <div id="collapse{{ feature.id }}" class="accordion-collapse collapse"
                                  aria-labelledby="heading{{ feature.id }}" data-bs-parent="#featuresAccordion">
+                                <div class="accordion-body">
+                                    {{ feature.feature_description }}
+                                </div>
                             </div>
                         </div>
                     {% empty %}
@@ -119,7 +123,39 @@
                         </p>
                     {% endfor %}
                 </div>
+
+                <form method="POST" id="featureFormSetContainer" style="display: none;">
+                    {% csrf_token %}
+                    {{ feature_formset.management_form }}
+
+                    <div class="form-list">
+                        {% for form in feature_formset %}
+                            <div class="feature-form">
+                                <label for="FeatureNameInput-{{ forloop.counter0 }}">Feature name:</label>
+                                {{ form.feature_name }}
+                                <small id="FeatureNameCharCounter-{{ forloop.counter0 }}" class="text-muted">0/100
+                                    characters</small>
+
+                                <label for="FeatureDescriptionInput-{{ forloop.counter0 }}">Feature Description:</label>
+                                {{ form.feature_description }}
+                                <small id="FeatureDescriptionCharCounter-{{ forloop.counter0 }}" class="text-muted">0/300
+                                    characters</small>
+
+                                {{ form.DELETE }}
+                                {% for hidden in form.hidden_fields %}
+                                    {{ hidden }}
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <a href="#" id="addFormBtn" class="btn btn-secondary">Add More</a>
+                    <button type="submit" name="add_features" class="btn btn-primary">Save Features</button>
+                </form>
+
+
             </div>
+
         </div>
 
         <div id="analyticsSection" class="project-info-section" style="display: none;">
@@ -177,5 +213,60 @@
     <script src="{% static 'js/project_sections.js' %}"></script>
     <script src="{% static 'js/project_page_overview.js' %}"></script>
     <script src="{% static 'js/project_rating.js' %}"></script>
+    <script>
+        document.getElementById("toggleFeatureFormBtn").addEventListener("click", function (e) {
+            e.preventDefault();
+
+            const featureDisplay = document.getElementById("featuresAccordion");
+            const formSetContainer = document.getElementById("featureFormSetContainer");
+
+            if (formSetContainer.style.display === "none") {
+                formSetContainer.style.display = "block";
+                featureDisplay.style.display = "none";
+            } else {
+                formSetContainer.style.display = "none";
+                featureDisplay.style.display = "block";
+            }
+        });
+
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const addMoreBtn = document.getElementById('addFormBtn');
+            const totalForms = document.getElementById('id_features-TOTAL_FORMS'); // Correct ID for TOTAL_FORMS
+            const formList = document.querySelector('.form-list');
+
+            addMoreBtn.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                const currentFormCount = parseInt(totalForms.value); // Get the current number of forms
+                const lastForm = formList.querySelector('.feature-form:last-child'); // Get the last form element
+
+                // Clone the last form
+                const newForm = lastForm.cloneNode(true);
+
+                // Replace the form IDs and names with the new form number
+                newForm.innerHTML = newForm.innerHTML.replace(/-\d+-/g, `-${currentFormCount}-`);
+
+                // Clear the values in the newly cloned form (you don't want to copy the data from the last form)
+                const inputs = newForm.querySelectorAll('input, textarea');
+                inputs.forEach(input => {
+                    if (input.type !== 'hidden') {
+                        input.value = '';  // Reset the value of non-hidden fields
+                    }
+                });
+
+                // Append the new form to the form list
+                formList.appendChild(newForm);
+
+                // Update the TOTAL_FORMS field to reflect the new count
+                totalForms.value = currentFormCount + 1;
+            });
+        });
+
+    </script>
+
+
+
 {% endblock %}
 </body>
